@@ -1,0 +1,267 @@
+<TransferFunctions Type="User"
+                   Comment="US-VTK2"
+                   BlendMode="0"
+                   RelativeVisibleParameterRange="0 0.249199"
+                   RelativeVisibleValueRange="0 1">
+  <VolumeProperty Version="1.16"
+                  ClassName="vtkVolumeProperty"
+                  InterpolationType="1"
+                  IndependentComponents="1">
+    <Component Index="0"
+               Shade="0"
+               Ambient="0.2"
+               Diffuse="1"
+               Specular="0"
+               SpecularPower="1"
+               ColorChannels="3"
+               DisableGradientOpacity="1"
+               ComponentWeight="1"
+               ScalarOpacityUnitDistance="0.635469">
+      <RGBTransferFunction>
+        <ColorTransferFunction Version="1.12"
+                               ClassName="vtkColorTransferFunction"
+                               Size="6"
+                               Clamping="1"
+                               ColorSpace="1">
+          <Point X="0"
+                 Value="0 0 0"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="76.4734"
+                 Value="0.168627 0 0"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="155.362"
+                 Value="0.4 0.142096 0.076"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="218.956"
+                 Value="0.780392 0.607843 0.380392"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="274.481"
+                 Value="0.847059 0.835294 0.788235"
+                 MidPoint="0.0540605"
+                 Sharpness="0"/>
+          <Point X="1024"
+                 Value="1 1 1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+        </ColorTransferFunction>
+      </RGBTransferFunction>
+      <ScalarOpacity>
+        <PiecewiseFunction Version="1.11"
+                           ClassName="vtkPiecewiseFunction"
+                           Size="5"
+                           Clamping="1">
+          <Point X="0"
+                 Value="0"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="50.0186"
+                 Value="0.0108696"
+                 MidPoint="0.604192"
+                 Sharpness="0"/>
+          <Point X="160.229"
+                 Value="0.608696"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="281.963"
+                 Value="0.554348"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="1024"
+                 Value="0.5"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+        </PiecewiseFunction>
+      </ScalarOpacity>
+      <GradientOpacity>
+        <PiecewiseFunction Version="1.11"
+                           ClassName="vtkPiecewiseFunction"
+                           Size="2"
+                           Clamping="1">
+          <Point X="0"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="255"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+        </PiecewiseFunction>
+      </GradientOpacity>
+    </Component>
+    <Component Index="1"
+               Shade="0"
+               Ambient="0.2"
+               Diffuse="1"
+               Specular="0"
+               SpecularPower="1"
+               ColorChannels="3"
+               DisableGradientOpacity="1"
+               ComponentWeight="1"
+               ScalarOpacityUnitDistance="0.635469">
+      <RGBTransferFunction>
+        <ColorTransferFunction Version="1.12"
+                               ClassName="vtkColorTransferFunction"
+                               Size="2"
+                               Clamping="1"
+                               ColorSpace="0">
+          <Point X="0"
+                 Value="0 0 0"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="1024"
+                 Value="1 1 1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+        </ColorTransferFunction>
+      </RGBTransferFunction>
+      <ScalarOpacity>
+        <PiecewiseFunction Version="1.11"
+                           ClassName="vtkPiecewiseFunction"
+                           Size="2"
+                           Clamping="1">
+          <Point X="0"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="1024"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+        </PiecewiseFunction>
+      </ScalarOpacity>
+      <GradientOpacity>
+        <PiecewiseFunction Version="1.11"
+                           ClassName="vtkPiecewiseFunction"
+                           Size="2"
+                           Clamping="1">
+          <Point X="0"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="255"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+        </PiecewiseFunction>
+      </GradientOpacity>
+    </Component>
+    <Component Index="2"
+               Shade="0"
+               Ambient="0.2"
+               Diffuse="1"
+               Specular="0"
+               SpecularPower="1"
+               ColorChannels="3"
+               DisableGradientOpacity="1"
+               ComponentWeight="1"
+               ScalarOpacityUnitDistance="0.635469">
+      <RGBTransferFunction>
+        <ColorTransferFunction Version="1.12"
+                               ClassName="vtkColorTransferFunction"
+                               Size="2"
+                               Clamping="1"
+                               ColorSpace="0">
+          <Point X="0"
+                 Value="0 0 0"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="1024"
+                 Value="1 1 1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+        </ColorTransferFunction>
+      </RGBTransferFunction>
+      <ScalarOpacity>
+        <PiecewiseFunction Version="1.11"
+                           ClassName="vtkPiecewiseFunction"
+                           Size="2"
+                           Clamping="1">
+          <Point X="0"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="1024"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+        </PiecewiseFunction>
+      </ScalarOpacity>
+      <GradientOpacity>
+        <PiecewiseFunction Version="1.11"
+                           ClassName="vtkPiecewiseFunction"
+                           Size="2"
+                           Clamping="1">
+          <Point X="0"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="255"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+        </PiecewiseFunction>
+      </GradientOpacity>
+    </Component>
+    <Component Index="3"
+               Shade="0"
+               Ambient="0.2"
+               Diffuse="1"
+               Specular="0"
+               SpecularPower="1"
+               ColorChannels="3"
+               DisableGradientOpacity="1"
+               ComponentWeight="1"
+               ScalarOpacityUnitDistance="0.635469">
+      <RGBTransferFunction>
+        <ColorTransferFunction Version="1.12"
+                               ClassName="vtkColorTransferFunction"
+                               Size="2"
+                               Clamping="1"
+                               ColorSpace="0">
+          <Point X="0"
+                 Value="0 0 0"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="1024"
+                 Value="1 1 1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+        </ColorTransferFunction>
+      </RGBTransferFunction>
+      <ScalarOpacity>
+        <PiecewiseFunction Version="1.11"
+                           ClassName="vtkPiecewiseFunction"
+                           Size="2"
+                           Clamping="1">
+          <Point X="0"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="1024"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+        </PiecewiseFunction>
+      </ScalarOpacity>
+      <GradientOpacity>
+        <PiecewiseFunction Version="1.11"
+                           ClassName="vtkPiecewiseFunction"
+                           Size="2"
+                           Clamping="1">
+          <Point X="0"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+          <Point X="255"
+                 Value="1"
+                 MidPoint="0.5"
+                 Sharpness="0"/>
+        </PiecewiseFunction>
+      </GradientOpacity>
+    </Component>
+  </VolumeProperty>
+</TransferFunctions>
