@@ -8,4 +8,4 @@ SIZE = 1024
 socket = socket(AF_INET, SOCK_DGRAM)
 while True:
     socket.sendto('cool', (SERVER_IP, PORT_NUMBER))
-sys.exit()
+exit()

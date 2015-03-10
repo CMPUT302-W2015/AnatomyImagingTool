@@ -15,4 +15,4 @@ while True:
         (data, addr) = socket.recvfrom(SIZE)
         print data
 
-sys.exit()
+exit()
