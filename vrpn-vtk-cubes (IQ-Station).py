@@ -12,7 +12,7 @@ def callback(userdata, data):
 
     
 class vtkTimerCallBack():
-    tracker=vrpn.receiver.Tracker("head@localhost:3883")
+    tracker=vrpn.receiver.Tracker("Head@localhost:3883")
     
     def __init__(self, ren, text):
         self.ren = ren
