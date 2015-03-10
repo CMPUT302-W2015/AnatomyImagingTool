@@ -1,4 +1,3 @@
-import sysconfig    
 from socket import socket, AF_INET, SOCK_DGRAM
 
 SERVER_IP = '10.19.216.65'
