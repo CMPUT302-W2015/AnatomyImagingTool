@@ -1,24 +1,27 @@
+from PyQt4.QtGui import QGridLayout, QLabel, QDialog, QSlider
+from PyQt4.QtCore import Qt
+
 '''
 Created on Mar 10, 2015
 
 @author: Bradley
 '''
 
-class GradientOpacityEditor(QDialog):
+class OpacityEditor(QDialog):
     def __init__(self, volumeProperty, reader, renWin):
-        super(GradientOpacityEditor, self).__init__()  
+        super(OpacityEditor, self).__init__()  
         self.volumeProperty = volumeProperty
         self.reader = reader
         self.renWin = renWin
-        self.setWindowTitle("Gradient Opacity Editor") 
-        self.opacityfunction =  self.volumeProperty.GetGradientOpacity(0)
+        self.setWindowTitle("Opacity Editor") 
+        self.opacityfunction =  self.volumeProperty.GetScalarOpacity(0)
         self.npts = self.opacityfunction.GetSize()
         
         self.vScale = [[QSlider(Qt.Horizontal) for i in range(4)] for j in range(self.npts)]  
         self.label_value = [[QLabel(" ") for i in range(4)] for j in range(self.npts)]  
         
         label_scaleName = [QLabel() for j in range(4)]
-        for j, text in enumerate(("Intensity", " Opacity","Midpoint","Sharpness")):
+        for j, text in enumerate(("Intensity", "Opacity","Midpoint","Sharpness")):
             label_scaleName[j].setText(text)       
         
         layout = QGridLayout()
@@ -62,5 +65,5 @@ class GradientOpacityEditor(QDialog):
                 else:
                     self.label_value[i][j].setText(str(0.01*self.vScale[i][j].value()))
             
-        self.volumeProperty.SetGradientOpacity(self.opacityfunction)
-        self.renWin.Render()   
+        self.volumeProperty.SetScalarOpacity(self.opacityfunction)
+        self.renWin.Render()            

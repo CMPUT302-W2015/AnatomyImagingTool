@@ -1,5 +1,11 @@
+import numpy as np
+from ui.widgets.transferfunction import TransferFunction, TransferFunctionWidget
+from PySide.QtGui import QDialog as pysideQWidget
+
 '''
 Created on Mar 10, 2015
+
+TODO: Needs to add import statements
 
 @author: Bradley
 '''
@@ -72,3 +78,4 @@ class TransferFunctionEditor(pysideQWidget):
         
     def valueChanged(self, value):
         self.updateTransferFunction()
+        

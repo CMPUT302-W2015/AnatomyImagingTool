@@ -1,3 +1,6 @@
+from PyQt4.QtGui import QGridLayout, QWidget, QScrollBar, QLabel, QPushButton, QDial
+from PyQt4.QtCore import Qt, QSize
+
 '''
 Created on Mar 10, 2015
 

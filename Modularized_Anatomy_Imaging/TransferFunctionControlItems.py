@@ -1,3 +1,6 @@
+from PyQt4.QtGui import QWidget, QLabel, QPushButton, QHBoxLayout, QComboBox
+from PyQt4.QtCore import Qt
+
 '''
 Created on Mar 10, 2015
 

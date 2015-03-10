@@ -1,3 +1,5 @@
+from PyQt4.QtGui import QWidget, QPushButton, QHBoxLayout
+
 '''
 Created on Mar 10, 2015
 

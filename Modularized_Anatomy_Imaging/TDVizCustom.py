@@ -1,157 +1,19 @@
 from PyQt4.QtGui import QApplication, QMainWindow, QFrame, QGridLayout, QWidget, QScrollBar, QLabel, QTabWidget, QPushButton, QHBoxLayout, QSpinBox, QFileDialog, QComboBox, QGroupBox, QVBoxLayout, QDial, QDialog, QSlider, QMenu, QLineEdit
 from PyQt4.QtCore import Qt, QFile, QLatin1String, QSize
 from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
-import vtk, sys, dicom, numpy as np, glob, xml.etree.ElementTree as ET, os, datetime, colorsys
+import TDViz, vtk, sys, dicom, numpy as np, glob, xml.etree.ElementTree as ET, os, datetime, colorsys
 from ui.widgets.transferfunction import TransferFunction, TransferFunctionWidget
 from PySide.QtGui import QDialog as pysideQWidget
 from PySide.QtGui import QGridLayout as pysideQGridLayout
 import vrpn
 import math
-import GlobalVariables
+import GlobalVariables, VtkTimerCallBack, VTKTimerHeadTrack, TransferFunctionEditor, OpacityEditor, GradientOpacityEditor, ColorEditor
 
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
-'''
-
-class TDViz(QMainWindow):
-    def __init__(self, parent=None):
-        QMainWindow.__init__(self, parent)
-        
-        self.frame = QFrame()
-        self.vtkWidget = QVTKRenderWindowInteractor(self.frame)
-        
-        self.cropControlItems = CropControlItems(self)
-        self.commonControlItems = CommonControlItems(self)
-        self.positionControlItems = PositionControlItems(self)
-        self.transferFunctionControlItems = TransferFunctionControlItems(self)
-        self.planeWidgetControlItems = PlaneWidgetControlItems()
-        self.playControlItems = PlayControlItems(self)
-        self.smoothingControlItems = SmoothingControlItems(self)
-        self.lightingControlItems = LightingControlItems()
-        self.viewControlItems = ViewControlItems(self)
-        self.labelControlItems = LabelControlItems()
-        
-        
-        tabWidget = QTabWidget()
-        tabWidget.addTab(self.commonControlItems, "General Controls")
-        tabWidget.addTab(self.viewControlItems, "View Controls")
-        tabWidget.addTab(self.cropControlItems, "Cropping XYZ")
-        tabWidget.addTab(self.planeWidgetControlItems, "Cropping Planes")
-        tabWidget.addTab(self.transferFunctionControlItems, "Opacity && Color")
-        tabWidget.addTab(self.positionControlItems, "Rotation && Position")
-        tabWidget.addTab(self.playControlItems, "Play")
-        tabWidget.addTab(self.smoothingControlItems, "Smoothing")
-        tabWidget.addTab(self.lightingControlItems, "Lighting")
-        tabWidget.addTab(self.labelControlItems, "Labelling")
-
-        
-        buttonGroup = QGroupBox()
-        self.button_quit = QPushButton("Close")
-        self.button_savesettings = QPushButton("Save Settings")
-        self.label_loadsettings = QLabel("Load Settings: ")
-        self.label_loadsettings.setAlignment(Qt.AlignTrailing)
-        self.combobox_loadsettings = QComboBox()
-        
-        buttonLayout = QGridLayout()
-        for index, button in enumerate((self.label_loadsettings, self.combobox_loadsettings, self.button_savesettings, self.button_quit)):
-            buttonLayout.addWidget(button, index/2, index % 2 )
-        buttonLayout.setSpacing(0)
-        buttonLayout.setColumnStretch(0,4)
-        buttonLayout.setColumnStretch(1,6)        
-        
-        buttonGroup.setLayout(buttonLayout)
-        
-        
-        layout = QGridLayout()
-        layout.addWidget(self.vtkWidget, 0, 0, 1, 2)
-        layout.setRowStretch(0, 10)
-        layout.addWidget(tabWidget, 1, 0)
-        layout.addWidget(buttonGroup, 1, 1)
-        layout.setSpacing(0)
-        layout.setMargin(0)
-        layout.setColumnStretch(0,10)
-        layout.setColumnStretch(1,3)
-        
-        self.frame.setLayout(layout)
-        self.setCentralWidget(self.frame)
-        
-        self.button_quit.clicked.connect(self.close)
-        self.button_loadEcho.clicked.connect(self.loadEcho)
-        self.button_box.clicked.connect(self.setBoxWidget)
-        self.transferFunctionControlItems.combobox_transfunction.activated.connect(self.updateTFunc)
-        self.button_resetcrop.clicked.connect(self.resetCrop)
-        self.button_stereo.clicked.connect(self.setStereo)
-        self.button_measurement.clicked.connect(self.setMeasurement)
-        self.button_anglemeasurement.clicked.connect(self.setAngleMeasurement)
-        self.button_loadDir.clicked.connect(self.loadDir)
-        self.button_savesettings.clicked.connect(self.saveSettings)
-        self.button_iterate.clicked.connect(self.playCardiacCycle)
-        self.button_rotate.clicked.connect(self.rotateCamera)
-        self.transferFunctionControlItems.button_edittransfunction.clicked.connect(self.editTransferFunction)
-        self.transferFunctionControlItems.button_editopacity.clicked.connect(self.editOpacity)
-        self.transferFunctionControlItems.button_editcolor.clicked.connect(self.editColor)
-        self.transferFunctionControlItems.button_editgradient.clicked.connect(self.editGradientOpacity)
-        self.transferFunctionControlItems.button_savetfunction.clicked.connect(self.saveTransferFunction)
-
-        self.button_savescreen.clicked.connect(self.saveScreen)
-        self.combobox_loadsettings.activated.connect(self.loadSettings)
-        
-            
-        for scale in (self.scale_xmin, self.scale_xmax, self.scale_ymin, self.scale_ymax, self.scale_zmin, self.scale_zmax):
-            scale.valueChanged.connect(self.cropVolume)
-            
-        for slider in (self.slider_xsmooth,self.slider_ysmooth,self.slider_zsmooth):
-            slider.valueChanged.connect(self.smoothVolume)
-            
-        self.button_nosmooth.clicked.connect(self.setNoSmooth)
-        self.button_lowsmooth.clicked.connect(self.setLowSmooth)
-        self.button_midsmooth.clicked.connect(self.setMidSmooth)
-        self.button_highsmooth.clicked.connect(self.setHighSmooth)            
-
-        self.scale_azimuth.valueChanged.connect(self.setAzimuth)
-        self.scale_elevation.valueChanged.connect(self.setElevation)
-        self.scale_roll.valueChanged.connect(self.setRoll)
-        self.scale_stereodepth.valueChanged.connect(self.setStereoDepth)
-        
-        self.button_zoomin.clicked.connect(self.zoomIn)
-        self.button_zoomout.clicked.connect(self.zoomOut)
-        self.button_resetcamera.clicked.connect(self.resetCamera)
-        
-        self.slider_imageNumber.valueChanged.connect(self.slider_imageNumber_valuechanged)
-        
-        for i in range(6):
-            self.planeWidgetControlItems.button_pwidgets[i].toggled.connect(self.setPlaneWidgets)
-            self.planeWidgetControlItems.button_pwidgetreset[i].clicked.connect(self.resetPlaneWidget)
-            
-        self.planeWidgetControlItems.button_pwdigetresetall.clicked.connect(self.resetAllPlaneWidgets)
-        self.button_cameratext.toggled.connect(self.displayCameraOrientation)
-        
-        self.lightingControlItems.button_shade.toggled.connect(self.setShade)
-        self.lightingControlItems.button_interpolation.toggled.connect(self.setInterpolation)
-        self.lightingControlItems.button_gradientopacity.toggled.connect(self.setDisableGradientOpacity)
-        self.lightingControlItems.slider_ambient.valueChanged.connect(self.adjustLights)
-        self.lightingControlItems.slider_diffuse.valueChanged.connect(self.adjustLights)
-        self.lightingControlItems.slider_specular.valueChanged.connect(self.adjustLights)
-        
-        self.lightingControlItems.slider_keylightintensity.valueChanged.connect(self.setKeyLightIntensity)
-        
-        self.labelControlItems.button_label.toggled.connect(self.displayLabel)
-        self.labelControlItems.text_label.textEdited.connect(self.changeLabelText)
-        self.labelControlItems.scale_labelsize.valueChanged.connect(self.changeLabelSize)
-        self.labelControlItems.combobox_labels.currentIndexChanged[int].connect(self.changeLabelIndex)
-                
-        for button in self.button_view:
-            button.clicked.connect(self.changeView)
-
-        
-    def getRenderWindow(self):
-        return self.vtkWidget.GetRenderWindow()
-        
-        
-'''
-Created on Mar 10, 2015
+TODO: Fix __init__() problem
+TODO: Fix GlobalVariables import problem
 
 @author: Bradley
 '''
@@ -186,7 +48,7 @@ class TDVizCustom(TDViz):
         self.initSphereWidget()
         self.initLabels()
         
-        tfuncs = glob.glob1(tfuncdir, "*.vvt")
+        tfuncs = glob.glob1(GlobalVariables.tfuncdir, "*.vvt")
         self.transferFunctionControlItems.combobox_transfunction.addItems(tfuncs)        
 
         self.varscaleazimuth = self.scale_azimuth.value()
@@ -553,7 +415,7 @@ class TDVizCustom(TDViz):
     def loadEcho(self):        
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        self.fname = QFileDialog.getOpenFileName(self,"Select DICOM File",initfdir,"All Files (*);;Text Files (*.txt)", "", options)        
+        self.fname = QFileDialog.getOpenFileName(self,"Select DICOM File", GlobalVariables.initfdir,"All Files (*);;Text Files (*.txt)", "", options)        
         
         if self.fname:
             
@@ -599,13 +461,13 @@ class TDVizCustom(TDViz):
             self.slider_imageNumber.setMaximum(self.volT.shape[3]-1)
             self.slider_imageNumber.setValue(0)
             self.slider_imageNumber_valuechanged()
-            self.cb = vtkTimerCallBack(self.volT.shape[3], self.isplay, self.isrotate, self.slider_imageNumber)
+            self.cb = VtkTimerCallBack.vtkTimerCallBack(self.volT.shape[3], self.isplay, self.isrotate, self.slider_imageNumber)
             
             self.cb.renderer = self._ren
     
     def loadDir(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly | QFileDialog.DontUseNativeDialog
-        self.dirname = str(QFileDialog.getExistingDirectory(self,"Select DICOM Directory", initddir, options))
+        self.dirname = str(QFileDialog.getExistingDirectory(self,"Select DICOM Directory", GlobalVariables.initddir, options))
         
         if self.dirname:
             subdir = [name for name in os.listdir(self.dirname) if os.path.isdir(os.path.join(self.dirname, name))]            
@@ -679,7 +541,7 @@ class TDVizCustom(TDViz):
         self.resetBoxWidget()   
         self.resetAllPlaneWidgets()     
                 
-        self.create_color_opacity_table(tfuncdir + str(self.transferFunctionControlItems.combobox_transfunction.itemText(self.transferFunctionControlItems.combobox_transfunction.currentIndex())))
+        self.create_color_opacity_table(GlobalVariables.tfuncdir + str(self.transferFunctionControlItems.combobox_transfunction.itemText(self.transferFunctionControlItems.combobox_transfunction.currentIndex())))
         
         for scale, idim, val in zip((self.scale_xmin,self.scale_ymin,self.scale_zmin,self.scale_xmax,self.scale_ymax,self.scale_zmax),(0,1,2,0,1,2),(0,0,0,self.dim[0],self.dim[1],self.dim[2])):
             scale.setMaximum(self.dim[idim])
@@ -697,7 +559,7 @@ class TDVizCustom(TDViz):
         self.planeWidgetControlItems.button_pwdigetresetall.setEnabled(True)
             
         self.combobox_loadsettings.clear()            
-        setting_files = glob.glob1(settings_dir+os.sep+self.sopuid, "*.xml")
+        setting_files = glob.glob1(GlobalVariables.settings_dir+os.sep+self.sopuid, "*.xml")
         if setting_files:
             self.combobox_loadsettings.addItems(setting_files)  
             self.combobox_loadsettings.setCurrentIndex(self.combobox_loadsettings.findText("last-settings.xml"))
@@ -724,7 +586,7 @@ class TDVizCustom(TDViz):
         self.distanceWidget.GetDistanceRepresentation().SetPoint2WorldPosition(np.array([0,0,-200])) 
                       
         
-        headtrack = vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.stylusactor, self.volume, self)
+        headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.stylusactor, self.volume, self)
         headtrack.renderer = self._ren
         self._iren.AddObserver('TimerEvent', headtrack.execute)
         self._iren.CreateRepeatingTimer(20)  
@@ -794,7 +656,7 @@ class TDVizCustom(TDViz):
                 
     def updateTFunc(self):
 
-        self.create_color_opacity_table(tfuncdir + str(self.transferFunctionControlItems.combobox_transfunction.itemText(self.transferFunctionControlItems.combobox_transfunction.currentIndex())))
+        self.create_color_opacity_table(GlobalVariables.tfuncdir + str(self.transferFunctionControlItems.combobox_transfunction.itemText(self.transferFunctionControlItems.combobox_transfunction.currentIndex())))
         self._renWin.Render()
 
     def cropVolume(self):
@@ -937,18 +799,18 @@ class TDVizCustom(TDViz):
             
             settings_subdir = self.sopuid            
             
-            if not os.path.isdir(settings_dir):
-                os.mkdir(settings_dir)
+            if not os.path.isdir(GlobalVariables.settings_dir):
+                os.mkdir(GlobalVariables.settings_dir)
                 
-            if not os.path.isdir(settings_dir+os.sep+settings_subdir):
-                os.mkdir(settings_dir+os.sep+settings_subdir)                
+            if not os.path.isdir(GlobalVariables.settings_dir+os.sep+settings_subdir):
+                os.mkdir(GlobalVariables.settings_dir+os.sep+settings_subdir)                
                 
-            if os.path.isfile(settings_dir + os.sep + settings_subdir+os.sep+"last-settings.xml"):
-                os.rename(settings_dir + os.sep + settings_subdir+os.sep+"last-settings.xml", settings_dir + os.sep + settings_subdir+os.sep+datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+".xml")
+            if os.path.isfile(GlobalVariables.settings_dir + os.sep + settings_subdir+os.sep+"last-settings.xml"):
+                os.rename(GlobalVariables.settings_dir + os.sep + settings_subdir+os.sep+"last-settings.xml", settings_dir + os.sep + settings_subdir+os.sep+datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+".xml")
                
             
             options = QFileDialog.Options() | QFileDialog.DontUseNativeDialog
-            filepath = QFileDialog.getSaveFileName(self,"Save Current Settings",settings_dir+ os.sep + settings_subdir+ os.sep + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),"XML Files (*.xml)", "XML Files (*.xml)",options)
+            filepath = QFileDialog.getSaveFileName(self,"Save Current Settings",GlobalVariables.settings_dir+ os.sep + settings_subdir+ os.sep + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),"XML Files (*.xml)", "XML Files (*.xml)",options)
                 
             if filepath:
                 _, ext = os.path.splitext(str(filepath))
@@ -960,7 +822,7 @@ class TDVizCustom(TDViz):
                 filedir, fname = os.path.split(str(filepath))
             
                 self.combobox_loadsettings.clear()            
-                setting_files = glob.glob1(settings_dir+os.sep+self.sopuid, "*.xml")
+                setting_files = glob.glob1(GlobalVariables.settings_dir+os.sep+self.sopuid, "*.xml")
                 if setting_files:
                     self.combobox_loadsettings.addItems(setting_files)   
                     self.combobox_loadsettings.setCurrentIndex(self.combobox_loadsettings.findText(fname+".xml"))
@@ -972,8 +834,8 @@ class TDVizCustom(TDViz):
             
             setting_fname = str(self.combobox_loadsettings.itemText(self.combobox_loadsettings.currentIndex()))
             
-            if os.path.isfile(settings_dir + os.sep + fname+os.sep+setting_fname):
-                tree = ET.parse(settings_dir + os.sep + fname+os.sep+setting_fname)  
+            if os.path.isfile(GlobalVariables.settings_dir + os.sep + fname+os.sep+setting_fname):
+                tree = ET.parse(GlobalVariables.settings_dir + os.sep + fname+os.sep+setting_fname)  
             else:
                 options = QFileDialog.Options() | QFileDialog.DontUseNativeDialog
                 fname = QFileDialog.getOpenFileName(self,"Select Settings File",settings_dir,"All Files (*);;XML Files (*.xml)", "", options)
@@ -1026,7 +888,7 @@ class TDVizCustom(TDViz):
                 
                 tfuncsetting = tree.iter("tfunc").next()
                 self.transferFunctionControlItems.combobox_transfunction.setCurrentIndex(self.transferFunctionControlItems.combobox_transfunction.findText(tfuncsetting.get("filename")))
-                self.create_color_opacity_table(tfuncdir + str(self.transferFunctionControlItems.combobox_transfunction.itemText(self.transferFunctionControlItems.combobox_transfunction.currentIndex())))
+                self.create_color_opacity_table(GlobalVariables.tfuncdir + str(self.transferFunctionControlItems.combobox_transfunction.itemText(self.transferFunctionControlItems.combobox_transfunction.currentIndex())))
                 
                 rgbfunc = self.volumeProperty.GetRGBTransferFunction(0)
                 rgbfunc.RemoveAllPoints()
@@ -1086,7 +948,7 @@ class TDVizCustom(TDViz):
 
     def editTransferFunction(self):
         if self.reader:
-            self.transferFunctionEditor = TransferFunctionEditor(self.volumeProperty, self.reader, self._renWin)
+            self.transferFunctionEditor = TransferFunctionEditor.TransferFunctionEditor(self.volumeProperty, self.reader, self._renWin)
             layout = pysideQGridLayout()
             layout.setContentsMargins(0, 0, 0, 0)
             layout.addWidget(self.transferFunctionEditor.getTransferFunctionWidget())
@@ -1132,17 +994,17 @@ class TDVizCustom(TDViz):
         
     def editOpacity(self):
         if self.reader:  
-            self.opacityEditor = OpacityEditor(self.volumeProperty, self.reader, self._renWin)              
+            self.opacityEditor = OpacityEditor.OpacityEditor(self.volumeProperty, self.reader, self._renWin)              
             self.opacityEditor.show()          
 
     def editGradientOpacity(self):
         if self.reader:                 
-            self.opacityGradientEditor = GradientOpacityEditor(self.volumeProperty, self.reader, self._renWin)              
+            self.opacityGradientEditor = GradientOpacityEditor.GradientOpacityEditor(self.volumeProperty, self.reader, self._renWin)              
             self.opacityGradientEditor.show()   
     
     def editColor(self):
         if self.reader:     
-            self.colorEditor = ColorEditor(self.volumeProperty, self.reader, self._renWin)
+            self.colorEditor = ColorEditor.ColorEditor(self.volumeProperty, self.reader, self._renWin)
             self.colorEditor.show()
         
     def slider_imageNumber_valuechanged(self):
@@ -1349,7 +1211,7 @@ class TDVizCustom(TDViz):
         tree = ET.ElementTree(root)        
 
         options = QFileDialog.Options() | QFileDialog.DontUseNativeDialog
-        filepath = QFileDialog.getSaveFileName(self,"Save Transfer Function",tfuncdir+ os.sep + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),"VVT Files (*.vvt)", "VVT Files (*.vvt)",options)
+        filepath = QFileDialog.getSaveFileName(self,"Save Transfer Function",GlobalVariables.tfuncdir+ os.sep + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),"VVT Files (*.vvt)", "VVT Files (*.vvt)",options)
         if filepath:
             _, ext = os.path.splitext(str(filepath))
             if ext.upper() != '.VVT':
@@ -1362,7 +1224,8 @@ class TDVizCustom(TDViz):
         
         self.transferFunctionControlItems.combobox_transfunction.clear()
     
-        tfunc_files = glob.glob1(tfuncdir,"*.vvt")
+        tfunc_files = glob.glob1(GlobalVariables.tfuncdir,"*.vvt")
         if tfunc_files:
             self.transferFunctionControlItems.combobox_transfunction.addItems(tfunc_files)   
             self.transferFunctionControlItems.combobox_transfunction.setCurrentIndex(self.transferFunctionControlItems.combobox_transfunction.findText(fname+".vvt"))        
+

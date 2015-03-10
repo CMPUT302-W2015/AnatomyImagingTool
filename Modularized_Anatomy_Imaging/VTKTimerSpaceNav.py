@@ -1,3 +1,6 @@
+import vtk
+import vrpn
+
 '''
 Created on Mar 10, 2015
 

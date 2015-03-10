@@ -1,11 +1,7 @@
-from PyQt4.QtGui import QApplication#, QMainWindow, QFrame, QGridLayout, QWidget, QScrollBar, QLabel, QTabWidget, QPushButton, QHBoxLayout, QSpinBox, QFileDialog, QComboBox, QGroupBox, QVBoxLayout, QDial, QDialog, QSlider, QMenu, QLineEdit
-from PyQt4.QtCore import Qt, QFile, QLatin1String, QSize
-#from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
-import sys#, vtk, dicom, numpy as np, glob, xml.etree.ElementTree as ET, os, datetime, colorsys
-#from ui.widgets.transferfunction import TransferFunction, TransferFunctionWidget
-#from PySide.QtGui import QDialog as pysideQWidget
-#from PySide.QtGui import QGridLayout as pysideQGridLayout
-import GlobalVariables, TDViz, VTKTimerHeadTrack
+from PyQt4.QtGui import QApplication
+from PyQt4.QtCore import QFile, QLatin1String
+import sys
+import GlobalVariables, TDViz
 
 '''
 Created on Mar 10, 2015
