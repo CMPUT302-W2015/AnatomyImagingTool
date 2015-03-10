@@ -1,4 +1,3 @@
-import sys
 from socket import socket, AF_INET, SOCK_DGRAM
 from _socket import gethostbyname
 
@@ -15,4 +14,4 @@ while True:
         (data, addr) = socket.recvfrom(SIZE)
         print data
 
-sys.exit()
+exit()

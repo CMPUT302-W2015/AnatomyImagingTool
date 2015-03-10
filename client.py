@@ -1,4 +1,3 @@
-import sysconfig    
 from socket import socket, AF_INET, SOCK_DGRAM
 
 SERVER_IP = '10.19.216.65'
@@ -8,4 +7,4 @@ SIZE = 1024
 socket = socket(AF_INET, SOCK_DGRAM)
 while True:
     socket.sendto('cool', (SERVER_IP, PORT_NUMBER))
-sys.exit()
+exit()
