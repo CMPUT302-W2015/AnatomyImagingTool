@@ -1,7 +1,9 @@
+import sys
+import GlobalVariables
+import TDViz
+
 from PyQt4.QtGui import QApplication
 from PyQt4.QtCore import QFile, QLatin1String
-import sys
-import GlobalVariables, TDViz
 
 '''
 Created on Mar 10, 2015
@@ -9,7 +11,7 @@ Created on Mar 10, 2015
 @author: Bradley
 '''
 def main():
-   
+
     GlobalVariables.init()
    
     app = QApplication([])
@@ -25,7 +27,7 @@ def main():
     
 
     # TODO: Make sure you figure out this global import 3/10/2015
-    if False:#GlobalVariables.isprojector:
+    if GlobalVariables.isprojector:
         tdviz.setGeometry(1920, 0, 1280, 1024)
     else:
         tdviz.showFullScreen()    

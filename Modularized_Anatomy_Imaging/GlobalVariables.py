@@ -1,22 +1,22 @@
 #Global variables for everything related to AnatomyImagingSetup
 
-import numpy as np
-
-global isprojector
-global initfdir 
-global initddir
-global tfuncdir
-global settings_dir
-global screenshot_dir
-global camMatrix
-global camMat4x4
-
 '''
 Created on March 10th, 2015
 
 @author: Bradley
 '''
 def init():
+    import numpy as np
+
+    global isprojector
+    global initfdir 
+    global initddir
+    global tfuncdir
+    global settings_dir
+    global screenshot_dir
+    global camMatrix
+    global camMat4x4
+    
     isprojector = False
     initfdir = ''
     initddir = ''
