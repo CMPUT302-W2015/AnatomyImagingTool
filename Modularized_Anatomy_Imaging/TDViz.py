@@ -222,6 +222,7 @@ class TDVizCustom(TDViz):
         self._renWin.Render()  
         
     def removeAllMouseEvents(self, obj):        
+        '''
         obj.RemoveObservers('LeftButtonPressEvent')
         obj.RemoveObservers('RightButtonPressEvent')
         obj.RemoveObservers('ButtonPressEvent')
@@ -231,7 +232,8 @@ class TDVizCustom(TDViz):
         obj.RemoveObservers('MouseMoveEvent')
         obj.RemoveObservers('MouseWheelForwardEvent')
         obj.RemoveObservers('MouseWheelBackwardEvent')
-        obj.RemoveObservers('MouseMoveEvent')        
+        obj.RemoveObservers('MouseMoveEvent')        '''
+        pass
         
     def initHeadTrackText(self):
         self.headtracktext = vtk.vtkTextActor()        

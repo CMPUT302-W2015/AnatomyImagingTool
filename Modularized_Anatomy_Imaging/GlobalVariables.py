@@ -20,7 +20,7 @@ def init():
     isprojector = False
     initfdir = ''
     initddir = ''
-    tfuncdir = 'Presets\\TransferFunctions\\'
+    tfuncdir = '../Presets\\TransferFunctions\\'
     settings_dir = 'settings'
     screenshot_dir = 'screenshots'
     
