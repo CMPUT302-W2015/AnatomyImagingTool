@@ -1,5 +1,6 @@
 from PyQt4.QtGui import QGridLayout, QLabel, QDialog, QSlider
 from PyQt4.QtCore import Qt
+import numpy as np
 
 '''
 Created on Mar 10, 2015
