@@ -159,6 +159,8 @@ class TDViz(QMainWindow):
 '''
 Created on Mar 10, 2015
 
+@todo: Move functionality to separate file
+
 @author: Bradley
 '''
 
@@ -247,35 +249,49 @@ class TDVizCustom(TDViz):
         self._ren.AddActor(self.stylustext)  
         
     def initStylus(self):
-        sphere = vtk.vtkSphereSource()
-        sphere.SetThetaResolution(30)
-        sphere.SetPhiResolution(30)
-        sphere.SetRadius(2)
+        
+        cube = vtk.vtkCubeSource()
+        cube.SetXLength(120)
+        cube.SetYLength(120)
+        cube.SetZLength(0)
+        
 
-        sphereTransform = vtk.vtkTransform()
-        sphereTransform.Translate(0, 0, -100)        
         
-        sphereTransformFilter = vtk.vtkTransformPolyDataFilter()
-        sphereTransformFilter.SetInputConnection(sphere.GetOutputPort())
-        sphereTransformFilter.SetTransform(sphereTransform)
+        cubeTransform = vtk.vtkTransform()
+        cubeTransform.Translate(0, 0, 0)
         
+        cubeMapper = vtk.vtkPolyDataMapper()
+        cubeMapper.SetInputConnection(cube.GetOutputPort())
+                
+
+        
+        cubeTransformFilter = vtk.vtkTransformPolyDataFilter()
+        cubeTransformFilter.SetInputConnection(cube.GetOutputPort())
+        cubeTransformFilter.SetTransform(cubeTransform)
+        
+        '''
+
         line = vtk.vtkLineSource()
         line.SetResolution(30)
         line.SetPoint1(0.0, 0.0, 0.0)
         line.SetPoint2(0.0, 0.0, -100)
+        '''
         
         appendFilter = vtk.vtkAppendPolyData()
-        appendFilter.AddInputConnection(line.GetOutputPort())
-        appendFilter.AddInputConnection(sphereTransformFilter.GetOutputPort())
+        #appendFilter.AddInputConnection(line.GetOutputPort())
+        appendFilter.AddInputConnection(cubeTransformFilter.GetOutputPort())
+       
+        self.x = GlobalVariables.imageXDist/2.0
+        self.y = GlobalVariables.imageYDist/2.0
+        self.z = GlobalVariables.imageZDist/2.0
         
+        self.cubeActor = vtk.vtkActor()
+        self.cubeActor.SetMapper(cubeMapper)
+        self.cubeActor.GetProperty().SetColor(0.2, 0.6, 0.8)
+        self.cubeActor.SetPosition(self.x,self.y,self.z)#(self.sampleSpacing[0]/2,self.sampleSpacing[1]/2,self.sampleSpacing[2]/2)#(-30, -30, -150) #(70,90,50)
+              
+        self._ren.AddActor(self.cubeActor)
         
-        lineMapper = vtk.vtkPolyDataMapper()
-        lineMapper.SetInputConnection(appendFilter.GetOutputPort())
-        
-        self.stylusactor = vtk.vtkActor()
-        self.stylusactor.SetMapper(lineMapper)    
-        
-        self._ren.AddActor(self.stylusactor)
         
        
     def cameraAnyEvent(self,obj,evt):
@@ -582,7 +598,27 @@ class TDVizCustom(TDViz):
             self.reader.SetWholeExtent(0, self.dim[0] - 1, 0, self.dim[1] - 1, 0, self.dim[2] - 1)
             self.reader.SetDataSpacing(self.spacing[0], self.spacing[1], self.spacing[2]) 
             
- 
+            # ------
+            
+            #Store the length of each of the image axes
+            GlobalVariables.imageXDist = (float(self.dim[0])*self.spacing[0])
+            GlobalVariables.imageYDist = (float(self.dim[1])*self.spacing[1])
+            GlobalVariables.imageZDist = (float(self.dim[2])*self.spacing[2])
+            
+            print ("x: " + str(self.dim[0]))
+            print ("y: " + str(self.dim[1]))
+            print ("z: " + str(self.dim[2]))
+            '''
+            print ("xmax: " + str(self.scale_xmax.value()))
+            print ("ymax: " + str(self.scale_ymax.value()))
+            print ("zmax: " + str(self.scale_zmax.value()))
+            '''
+            print ("Spacing[0]: " + str(self.spacing[0]))
+            print ("Spacing[1]: " + str(self.spacing[1]))
+            print ("Spacing[2]: " + str(self.spacing[2]))
+            
+            # ------
+            
             self.volumeMapper = vtk.vtkOpenGLVolumeTextureMapper3D()
             self.volumeMapper.SetPreferredMethodToNVidia()
             self.volumeMapper.SetSampleDistance(0.5)
@@ -732,7 +768,7 @@ class TDVizCustom(TDViz):
         self.distanceWidget.GetDistanceRepresentation().SetPoint2WorldPosition(np.array([0,0,-200])) 
                       
         
-        headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.stylusactor, self.volume, self)
+        headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, self)
         headtrack.renderer = self._ren
         self._iren.AddObserver('TimerEvent', headtrack.execute)
         self._iren.CreateRepeatingTimer(20)  
@@ -809,6 +845,7 @@ class TDVizCustom(TDViz):
         self.volumeMapper.SetCroppingRegionPlanes(self.scale_xmin.value()*self.spacing[0], self.scale_xmax.value()*self.spacing[0],\
                                                   self.scale_ymin.value()*self.spacing[1], self.scale_ymax.value()*self.spacing[1],\
                                                   self.scale_zmin.value()*self.spacing[2], self.scale_zmax.value()*self.spacing[2])
+        
         self.volumeMapper.CroppingOn()
         self._renWin.Render()
 

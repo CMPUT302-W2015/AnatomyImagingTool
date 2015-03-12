@@ -1,6 +1,7 @@
 import vtk, numpy as np
 import vrpn
 import math
+import GlobalVariables
 
 '''
 Created on Mar 10, 2015
@@ -10,14 +11,14 @@ Created on Mar 10, 2015
 
 class vtkTimerHeadTrack():
     tracker=vrpn.receiver.Tracker("Tracker0@localhost")
-    button=vrpn.receiver.Button("Tracker0@localhost")
+    tablet=vrpn.receiver.Tracker("Tablet@localhost:3883")
     
     
     def __init__(self, cam, text, text2, lineactor, volume, master):
         self.text = text
         self.text2 = text2
         self.tracker.register_change_handler("tracker", self.callback, "position")
-        self.button.register_change_handler("button", self.callback_button)
+        self.tablet.register_change_handler("tablet", self.callback,"position")
         
         self.lineactor = lineactor
         self.cam = cam
@@ -25,9 +26,9 @@ class vtkTimerHeadTrack():
         self.rmatrix = np.zeros((4,4))
         self.rmatrix4x4 = vtk.vtkMatrix4x4()        
         
-        self.button0state = False
-        self.button1state = False        
-        self.button2state = False
+        #self.button0state = False
+        #self.button1state = False        
+        #self.button2state = False
         self.volume = volume
         self.volumeTransform = vtk.vtkTransform()
         self.initialvolumeTransform = None
@@ -38,10 +39,10 @@ class vtkTimerHeadTrack():
         
     def execute(self, obj, event):
         iren = obj
-        self.button.mainloop()
+        self.tablet.mainloop()
         self.tracker.mainloop()           
         iren.GetRenderWindow().Render()   
-        
+    '''    
     def callback_button(self, userdata, data):
         if data['button'] == 0:
             if data['state'] == 1:
@@ -63,23 +64,34 @@ class vtkTimerHeadTrack():
                 self.button2state = True
             elif data['state'] == 0:
                 self.lineactor.GetProperty().SetColor(1.0,1.0,1.0)
-                self.button2state = False                             
+                self.button2state = False
+'''                             
     
     def callback(self, userdata, data):
+        
+        print str(userdata)
+        print str(data)
 
         dx, dy, dz = data['position']
-        qx, qy, qz, qw = data['quaternion']        
-        sensorid = data['sensor']
+        qx, qy, qz, qw = data['quaternion']  
+         
+        if str(userdata) == "tablet":
+            sensorid = 1
+        else:
+            sensorid = 0
         
         qwxyz = np.array([qw,qx,qy,qz])        
         vtk.vtkMath.QuaternionToMatrix3x3(qwxyz, self.rmatrix[0:3,0:3])
                
-        self.rmatrix[0,3] = 1000*dx
-        self.rmatrix[1,3] = 1000*dy
-        self.rmatrix[2,3] = 1000*dz
+        '''
+        @todo: Make this adjust based on the pre-defined centre point
+        '''
+        self.rmatrix[0,3] = 0*dx#1000*dx
+        self.rmatrix[1,3] = 0*dy#1000*dy
+        self.rmatrix[2,3] = 0*dz#1000*dz
         self.rmatrix[3,3] = 1.0
         
-        self.rmatrix = camMat4x4.dot(self.rmatrix)
+        self.rmatrix = GlobalVariables.camMat4x4.dot(self.rmatrix)
         
         if sensorid == 0:
             self.text.SetInput("pos = (%-#6.3g, %-#6.3g, %-#6.3g)\n quaternion = (%-#6.3g, %-#6.3g, %-#6.3g, %-#6.3g)" % (dx, dy, dz, qw, qx, qy, qz))
@@ -99,7 +111,7 @@ class vtkTimerHeadTrack():
             
             transformCam = vtk.vtkTransform()            
             transformCam.Concatenate(self.rmatrix4x4)    
-            
+            '''
             if self.button0state:
                                
                 stylusTransform = vtk.vtkTransform()        
@@ -115,7 +127,9 @@ class vtkTimerHeadTrack():
                 self.cam.SetUserViewTransform(stylusTransform)
                 self.cam.Modified()
                 
-                
+            ''' 
+            if False:
+                pass   
             else:
                 self.initialCameraTransformMatrix = transformCam
                 self.initialCameraUserViewTransform = self.cam.GetUserViewTransform()
@@ -125,7 +139,7 @@ class vtkTimerHeadTrack():
                 self.lineactor.SetUserTransform(transform)
                 self.lineactor.Modified()     
                 
-                
+            '''    
             if self.button1state:
                 if self.initialZPosition:
                     scaleTransform = vtk.vtkTransform()
@@ -136,20 +150,23 @@ class vtkTimerHeadTrack():
 
                     scaleTransform.Scale(scale, scale, scale)
                     self.cam.SetUserViewTransform(scaleTransform)
-                    self.cam.Modified()                        
+                    self.cam.Modified() 
+            '''
+            if False:
+                pass                       
 
             else:
                 self.initialZPosition = dz
                 self.initialScaleTransform = self.cam.GetUserViewTransform()  
-                
+            '''    
             if self.button2state:
                 if self.master.distanceWidget.GetEnabled():
                     self.distanceWidgetInteraction(transform)
                 elif self.master.angleWidget.GetEnabled():
                     self.angleWidgetInteraction(transform)    
                 else:
-                    self.planeWidgetInteraction(transform)   
-
+                    self.planeWidgetInteraction(transform)
+            '''
             self.text2.SetInput("pos = (%-#6.3g, %-#6.3g, %-#6.3g)\n quaternion = (%-#6.3g, %-#6.3g, %-#6.3g, %-#6.3g)" % (self.rmatrix4x4.GetElement(0, 3), self.rmatrix4x4.GetElement(1, 3), self.rmatrix4x4.GetElement(2, 3), qw, qx, qy, qz))
 
     def distanceWidgetInteraction(self, transform):

@@ -17,6 +17,10 @@ def init():
     global camMatrix
     global camMat4x4
     
+    global imageXDist
+    global imageYDist
+    global imageZDist
+    
     isprojector = False
     initfdir = ''
     initddir = ''
@@ -26,3 +30,11 @@ def init():
     
     camMatrix = np.array([1.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.541127, -0.840941, 0.000000, 0.000000, 0.840941, 0.541127, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000])
     camMat4x4 = np.reshape(camMatrix, (4,4))
+    
+    #Represents dimensions of imported image
+    imageXDist = 0
+    imageYDist = 0
+    imageZDist = 0
+    
+    
+    

@@ -102,35 +102,39 @@ class TDVizCustom(TDViz):
         self._ren.AddActor(self.stylustext)  
         
     def initStylus(self):
-        sphere = vtk.vtkSphereSource()
-        sphere.SetThetaResolution(30)
-        sphere.SetPhiResolution(30)
-        sphere.SetRadius(2)
 
-        sphereTransform = vtk.vtkTransform()
-        sphereTransform.Translate(0, 0, -100)        
+        cube = vtk.vtkCubeSource()
+        cube.SetXLength(60)
+        cube.SetYLength(60)
+        cube.SetZLength(0)
+    
+        cubeTransform = vtk.vtkTransform()
+        cubeTransform.Translate(0, 0, -100)
         
-        sphereTransformFilter = vtk.vtkTransformPolyDataFilter()
-        sphereTransformFilter.SetInputConnection(sphere.GetOutputPort())
-        sphereTransformFilter.SetTransform(sphereTransform)
+        cubeMapper = vtk.vtkPolyDataMapper()
+        cubeMapper.SetInputConnection(cube.GetOutputPort())
         
+        cubeTransformFilter = vtk.vtkTransformPolyDataFilter()
+        cubeTransformFilter.SetInputConnection(cube.GetOutputPort())
+        cubeTransformFilter.SetTransform(cubeTransform)
+        
+        '''
         line = vtk.vtkLineSource()
         line.SetResolution(30)
         line.SetPoint1(0.0, 0.0, 0.0)
         line.SetPoint2(0.0, 0.0, -100)
+        '''
         
         appendFilter = vtk.vtkAppendPolyData()
-        appendFilter.AddInputConnection(line.GetOutputPort())
-        appendFilter.AddInputConnection(sphereTransformFilter.GetOutputPort())
-        
-        
-        lineMapper = vtk.vtkPolyDataMapper()
-        lineMapper.SetInputConnection(appendFilter.GetOutputPort())
-        
-        self.stylusactor = vtk.vtkActor()
-        self.stylusactor.SetMapper(lineMapper)    
-        
-        self._ren.AddActor(self.stylusactor)
+        #appendFilter.AddInputConnection(line.GetOutputPort())
+        appendFilter.AddInputConnection(cubeTransformFilter.GetOutputPort())       
+       
+        self.cubeActor = vtk.vtkActor()
+        self.cubeActor.SetMapper(cubeMapper)
+        self.cubeActor.GetProperty().SetColor(0.2, 0.6, 0.8)
+        self.cubeActor.SetPosition(-30, -30, -150)       
+              
+        self._ren.AddActor(self.cubeActor)
         
        
     def cameraAnyEvent(self,obj,evt):
@@ -587,7 +591,7 @@ class TDVizCustom(TDViz):
         self.distanceWidget.GetDistanceRepresentation().SetPoint2WorldPosition(np.array([0,0,-200])) 
                       
         
-        headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.stylusactor, self.volume, self)
+        headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, self)
         headtrack.renderer = self._ren
         self._iren.AddObserver('TimerEvent', headtrack.execute)
         self._iren.CreateRepeatingTimer(20)  
