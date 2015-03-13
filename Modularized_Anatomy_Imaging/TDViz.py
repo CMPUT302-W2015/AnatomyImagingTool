@@ -1,16 +1,12 @@
-from PyQt4.QtGui import QApplication, QMainWindow, QFrame, QGridLayout, QWidget, QScrollBar, QLabel, QTabWidget, QPushButton, QHBoxLayout, QSpinBox, QFileDialog, QComboBox, QGroupBox, QVBoxLayout, QDial, QDialog, QSlider, QMenu, QLineEdit
-from PyQt4.QtCore import Qt, QFile, QLatin1String, QSize
+from PyQt4.QtGui import QMainWindow, QFrame, QGridLayout, QLabel, QTabWidget, QPushButton, QFileDialog, QComboBox, QGroupBox
+from PyQt4.QtCore import Qt
 from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
-import vtk, sys, dicom, numpy as np, glob, xml.etree.ElementTree as ET, os, datetime, colorsys
-from ui.widgets.transferfunction import TransferFunction, TransferFunctionWidget
-from PySide.QtGui import QDialog as pysideQWidget
+import vtk, dicom, numpy as np, glob, xml.etree.ElementTree as ET, os, datetime
 from PySide.QtGui import QGridLayout as pysideQGridLayout
-import vrpn
-import math
 import GlobalVariables
 import CropControlItems, CommonControlItems, PositionControlItems, TransferFunctionControlItems, PlaneWidgetControlItems, PlayControlItems
 import SmoothingControlItems, LightingControlItems, ViewControlItems, LabelControlItems, VtkTimerCallBack, VTKTimerHeadTrack, TransferFunctionEditor
-import OpacityEditor, GradientOpacityEditor, ColorEditor
+import OpacityEditor, GradientOpacityEditor, ColorEditor, PlaneGenerator
 
 '''
 Created on Mar 10, 2015
@@ -248,7 +244,7 @@ class TDVizCustom(TDViz):
         self._ren.AddActor(self.stylustext)  
         
     def initStylus(self):
-        
+        '''
         cube = vtk.vtkCubeSource()
         cube.SetXLength(120)
         cube.SetYLength(120)
@@ -284,11 +280,14 @@ class TDVizCustom(TDViz):
         self.y = GlobalVariables.imageYDist/2.0 # @UndefinedVariable
         self.z = GlobalVariables.imageZDist/2.0 # @UndefinedVariable
         
+        
         self.cubeActor = vtk.vtkActor()
         self.cubeActor.SetMapper(cubeMapper)
         self.cubeActor.GetProperty().SetColor(0.2, 0.6, 0.8)
         self.cubeActor.SetPosition(self.x,self.y,self.z)#(self.sampleSpacing[0]/2,self.sampleSpacing[1]/2,self.sampleSpacing[2]/2)#(-30, -30, -150) #(70,90,50)
-              
+        '''
+        PlaneGenerator.init() # @UndefinedVariable  
+        self.cubeActor = PlaneGenerator.getCubeActor() # @UndefinedVariable  
         self._ren.AddActor(self.cubeActor)
         
         
