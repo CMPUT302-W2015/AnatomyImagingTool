@@ -244,6 +244,11 @@ class TDVizCustom(TDViz):
         self._ren.AddActor(self.stylustext)  
         
     def initStylus(self):
+        
+        PlaneGenerator.init() # @UndefinedVariable  
+        self.cubeActor = PlaneGenerator.getCubeActor() # @UndefinedVariable  
+        self._ren.AddActor(self.cubeActor)
+        
         '''
         cube = vtk.vtkCubeSource()
         cube.SetXLength(120)
@@ -264,14 +269,6 @@ class TDVizCustom(TDViz):
         cubeTransformFilter.SetInputConnection(cube.GetOutputPort())
         cubeTransformFilter.SetTransform(cubeTransform)
         
-        '''
-
-        line = vtk.vtkLineSource()
-        line.SetResolution(30)
-        line.SetPoint1(0.0, 0.0, 0.0)
-        line.SetPoint2(0.0, 0.0, -100)
-        '''
-        
         appendFilter = vtk.vtkAppendPolyData()
         #appendFilter.AddInputConnection(line.GetOutputPort())
         appendFilter.AddInputConnection(cubeTransformFilter.GetOutputPort())
@@ -286,10 +283,7 @@ class TDVizCustom(TDViz):
         self.cubeActor.GetProperty().SetColor(0.2, 0.6, 0.8)
         self.cubeActor.SetPosition(self.x,self.y,self.z)#(self.sampleSpacing[0]/2,self.sampleSpacing[1]/2,self.sampleSpacing[2]/2)#(-30, -30, -150) #(70,90,50)
         '''
-        PlaneGenerator.init() # @UndefinedVariable  
-        self.cubeActor = PlaneGenerator.getCubeActor() # @UndefinedVariable  
-        self._ren.AddActor(self.cubeActor)
-        
+               
         
        
     def cameraAnyEvent(self,obj,evt):
