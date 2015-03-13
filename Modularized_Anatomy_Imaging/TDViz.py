@@ -243,7 +243,7 @@ class TDVizCustom(TDViz):
         self.stylustext.SetInput("0")
         self._ren.AddActor(self.stylustext)  
         
-    def initStylus(self):
+    def initTabletPlane(self):
         
         PlaneGenerator.init() # @UndefinedVariable  
         self.cubeActor = PlaneGenerator.getCubeActor() # @UndefinedVariable  
@@ -754,7 +754,7 @@ class TDVizCustom(TDViz):
         self._ren.ResetCamera()     
         self._ren.ResetCameraClippingRange()   
         
-        self.initStylus()     
+        self.initTabletPlane()     
         
         self.distanceWidget.GetDistanceRepresentation().SetPoint1WorldPosition(np.array([0,0,-100]))
         self.distanceWidget.GetDistanceRepresentation().SetPoint2WorldPosition(np.array([0,0,-200])) 
