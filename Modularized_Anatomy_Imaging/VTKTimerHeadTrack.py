@@ -91,7 +91,7 @@ class vtkTimerHeadTrack():
         self.rmatrix[2,3] = 0*dz#1000*dz
         self.rmatrix[3,3] = 1.0
         
-        self.rmatrix = GlobalVariables.camMat4x4.dot(self.rmatrix)
+        self.rmatrix = GlobalVariables.camMat4x4.dot(self.rmatrix) # @UndefinedVariable
         
         if sensorid == 0:
             self.text.SetInput("pos = (%-#6.3g, %-#6.3g, %-#6.3g)\n quaternion = (%-#6.3g, %-#6.3g, %-#6.3g, %-#6.3g)" % (dx, dy, dz, qw, qx, qy, qz))

@@ -27,7 +27,7 @@ def main():
     
 
     # TODO: Make sure you figure out this global import 3/10/2015
-    if GlobalVariables.isprojector:
+    if GlobalVariables.isprojector: # @UndefinedVariable
         tdviz.setGeometry(1920, 0, 1280, 1024)
     else:
         tdviz.showFullScreen()    

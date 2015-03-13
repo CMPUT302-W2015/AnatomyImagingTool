@@ -20,7 +20,7 @@ TODO: Fix GlobalVariables import problem
 
 class TDVizCustom(TDViz):      
     def __init__(self, parent=None):
-        TDViz.__init__(self, parent)
+        TDViz.__init__(self, parent) # @UndefinedVariable
         
         self._renWin = self.getRenderWindow()
         self._renWin.StereoCapableWindowOn()
@@ -48,7 +48,7 @@ class TDVizCustom(TDViz):
         self.initSphereWidget()
         self.initLabels()
         
-        tfuncs = glob.glob1(GlobalVariables.tfuncdir, "*.vvt")
+        tfuncs = glob.glob1(GlobalVariables.tfuncdir, "*.vvt") # @UndefinedVariable
         self.transferFunctionControlItems.combobox_transfunction.addItems(tfuncs)        
 
         self.varscaleazimuth = self.scale_azimuth.value()
@@ -420,7 +420,7 @@ class TDVizCustom(TDViz):
     def loadEcho(self):        
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        self.fname = QFileDialog.getOpenFileName(self,"Select DICOM File", GlobalVariables.initfdir,"All Files (*);;Text Files (*.txt)", "", options)        
+        self.fname = QFileDialog.getOpenFileName(self,"Select DICOM File", GlobalVariables.initfdir,"All Files (*);;Text Files (*.txt)", "", options) # @UndefinedVariable        
         
         if self.fname:
             
@@ -472,7 +472,7 @@ class TDVizCustom(TDViz):
     
     def loadDir(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly | QFileDialog.DontUseNativeDialog
-        self.dirname = str(QFileDialog.getExistingDirectory(self,"Select DICOM Directory", GlobalVariables.initddir, options))
+        self.dirname = str(QFileDialog.getExistingDirectory(self,"Select DICOM Directory", GlobalVariables.initddir, options)) # @UndefinedVariable
         
         if self.dirname:
             subdir = [name for name in os.listdir(self.dirname) if os.path.isdir(os.path.join(self.dirname, name))]            
@@ -546,7 +546,7 @@ class TDVizCustom(TDViz):
         self.resetBoxWidget()   
         self.resetAllPlaneWidgets()     
                 
-        self.create_color_opacity_table(GlobalVariables.tfuncdir + str(self.transferFunctionControlItems.combobox_transfunction.itemText(self.transferFunctionControlItems.combobox_transfunction.currentIndex())))
+        self.create_color_opacity_table(GlobalVariables.tfuncdir + str(self.transferFunctionControlItems.combobox_transfunction.itemText(self.transferFunctionControlItems.combobox_transfunction.currentIndex()))) # @UndefinedVariable
         
         for scale, idim, val in zip((self.scale_xmin,self.scale_ymin,self.scale_zmin,self.scale_xmax,self.scale_ymax,self.scale_zmax),(0,1,2,0,1,2),(0,0,0,self.dim[0],self.dim[1],self.dim[2])):
             scale.setMaximum(self.dim[idim])
@@ -564,7 +564,7 @@ class TDVizCustom(TDViz):
         self.planeWidgetControlItems.button_pwdigetresetall.setEnabled(True)
             
         self.combobox_loadsettings.clear()            
-        setting_files = glob.glob1(GlobalVariables.settings_dir+os.sep+self.sopuid, "*.xml")
+        setting_files = glob.glob1(GlobalVariables.settings_dir+os.sep+self.sopuid, "*.xml") # @UndefinedVariable
         if setting_files:
             self.combobox_loadsettings.addItems(setting_files)  
             self.combobox_loadsettings.setCurrentIndex(self.combobox_loadsettings.findText("last-settings.xml"))
@@ -661,7 +661,7 @@ class TDVizCustom(TDViz):
                 
     def updateTFunc(self):
 
-        self.create_color_opacity_table(GlobalVariables.tfuncdir + str(self.transferFunctionControlItems.combobox_transfunction.itemText(self.transferFunctionControlItems.combobox_transfunction.currentIndex())))
+        self.create_color_opacity_table(GlobalVariables.tfuncdir + str(self.transferFunctionControlItems.combobox_transfunction.itemText(self.transferFunctionControlItems.combobox_transfunction.currentIndex()))) # @UndefinedVariable
         self._renWin.Render()
 
     def cropVolume(self):
@@ -804,18 +804,18 @@ class TDVizCustom(TDViz):
             
             settings_subdir = self.sopuid            
             
-            if not os.path.isdir(GlobalVariables.settings_dir):
-                os.mkdir(GlobalVariables.settings_dir)
+            if not os.path.isdir(GlobalVariables.settings_dir): # @UndefinedVariable
+                os.mkdir(GlobalVariables.settings_dir) # @UndefinedVariable
                 
-            if not os.path.isdir(GlobalVariables.settings_dir+os.sep+settings_subdir):
-                os.mkdir(GlobalVariables.settings_dir+os.sep+settings_subdir)                
+            if not os.path.isdir(GlobalVariables.settings_dir+os.sep+settings_subdir): # @UndefinedVariable
+                os.mkdir(GlobalVariables.settings_dir+os.sep+settings_subdir) # @UndefinedVariable       
                 
-            if os.path.isfile(GlobalVariables.settings_dir + os.sep + settings_subdir+os.sep+"last-settings.xml"):
-                os.rename(GlobalVariables.settings_dir + os.sep + settings_subdir+os.sep+"last-settings.xml", settings_dir + os.sep + settings_subdir+os.sep+datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+".xml")
+            if os.path.isfile(GlobalVariables.settings_dir + os.sep + settings_subdir+os.sep+"last-settings.xml"): # @UndefinedVariable
+                os.rename(GlobalVariables.settings_dir + os.sep + settings_subdir+os.sep+"last-settings.xml", settings_dir + os.sep + settings_subdir+os.sep+datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+".xml") # @UndefinedVariable
                
             
             options = QFileDialog.Options() | QFileDialog.DontUseNativeDialog
-            filepath = QFileDialog.getSaveFileName(self,"Save Current Settings",GlobalVariables.settings_dir+ os.sep + settings_subdir+ os.sep + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),"XML Files (*.xml)", "XML Files (*.xml)",options)
+            filepath = QFileDialog.getSaveFileName(self,"Save Current Settings",GlobalVariables.settings_dir+ os.sep + settings_subdir+ os.sep + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),"XML Files (*.xml)", "XML Files (*.xml)",options) # @UndefinedVariable
                 
             if filepath:
                 _, ext = os.path.splitext(str(filepath))
@@ -827,7 +827,7 @@ class TDVizCustom(TDViz):
                 filedir, fname = os.path.split(str(filepath))
             
                 self.combobox_loadsettings.clear()            
-                setting_files = glob.glob1(GlobalVariables.settings_dir+os.sep+self.sopuid, "*.xml")
+                setting_files = glob.glob1(GlobalVariables.settings_dir+os.sep+self.sopuid, "*.xml") # @UndefinedVariable
                 if setting_files:
                     self.combobox_loadsettings.addItems(setting_files)   
                     self.combobox_loadsettings.setCurrentIndex(self.combobox_loadsettings.findText(fname+".xml"))
@@ -839,11 +839,11 @@ class TDVizCustom(TDViz):
             
             setting_fname = str(self.combobox_loadsettings.itemText(self.combobox_loadsettings.currentIndex()))
             
-            if os.path.isfile(GlobalVariables.settings_dir + os.sep + fname+os.sep+setting_fname):
-                tree = ET.parse(GlobalVariables.settings_dir + os.sep + fname+os.sep+setting_fname)  
+            if os.path.isfile(GlobalVariables.settings_dir + os.sep + fname+os.sep+setting_fname): # @UndefinedVariable
+                tree = ET.parse(GlobalVariables.settings_dir + os.sep + fname+os.sep+setting_fname)# @UndefinedVariable
             else:
                 options = QFileDialog.Options() | QFileDialog.DontUseNativeDialog
-                fname = QFileDialog.getOpenFileName(self,"Select Settings File",settings_dir,"All Files (*);;XML Files (*.xml)", "", options)
+                fname = QFileDialog.getOpenFileName(self,"Select Settings File",settings_dir,"All Files (*);;XML Files (*.xml)", "", options) # @UndefinedVariable
                 if fname:
                     tree = ET.parse(fname)
             
@@ -893,7 +893,7 @@ class TDVizCustom(TDViz):
                 
                 tfuncsetting = tree.iter("tfunc").next()
                 self.transferFunctionControlItems.combobox_transfunction.setCurrentIndex(self.transferFunctionControlItems.combobox_transfunction.findText(tfuncsetting.get("filename")))
-                self.create_color_opacity_table(GlobalVariables.tfuncdir + str(self.transferFunctionControlItems.combobox_transfunction.itemText(self.transferFunctionControlItems.combobox_transfunction.currentIndex())))
+                self.create_color_opacity_table(GlobalVariables.tfuncdir + str(self.transferFunctionControlItems.combobox_transfunction.itemText(self.transferFunctionControlItems.combobox_transfunction.currentIndex()))) # @UndefinedVariable
                 
                 rgbfunc = self.volumeProperty.GetRGBTransferFunction(0)
                 rgbfunc.RemoveAllPoints()
@@ -1216,7 +1216,7 @@ class TDVizCustom(TDViz):
         tree = ET.ElementTree(root)        
 
         options = QFileDialog.Options() | QFileDialog.DontUseNativeDialog
-        filepath = QFileDialog.getSaveFileName(self,"Save Transfer Function",GlobalVariables.tfuncdir+ os.sep + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),"VVT Files (*.vvt)", "VVT Files (*.vvt)",options)
+        filepath = QFileDialog.getSaveFileName(self,"Save Transfer Function",GlobalVariables.tfuncdir+ os.sep + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"),"VVT Files (*.vvt)", "VVT Files (*.vvt)",options) # @UndefinedVariable
         if filepath:
             _, ext = os.path.splitext(str(filepath))
             if ext.upper() != '.VVT':
@@ -1229,7 +1229,7 @@ class TDVizCustom(TDViz):
         
         self.transferFunctionControlItems.combobox_transfunction.clear()
     
-        tfunc_files = glob.glob1(GlobalVariables.tfuncdir,"*.vvt")
+        tfunc_files = glob.glob1(GlobalVariables.tfuncdir,"*.vvt") # @UndefinedVariable
         if tfunc_files:
             self.transferFunctionControlItems.combobox_transfunction.addItems(tfunc_files)   
             self.transferFunctionControlItems.combobox_transfunction.setCurrentIndex(self.transferFunctionControlItems.combobox_transfunction.findText(fname+".vvt"))        

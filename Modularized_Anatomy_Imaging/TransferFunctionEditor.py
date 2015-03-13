@@ -63,11 +63,11 @@ class TransferFunctionEditor(pysideQWidget):
             self.opacityFunction = self.histogramWidget.transferFunction.opacityFunction
         else:
             # Transfer functions and properties
-            self.colorFunction = vtkColorTransferFunction()
+            self.colorFunction = vtkColorTransferFunction() # @UndefinedVariable
             self.colorFunction.AddRGBPoint(self.minimum, 0, 0, 0)
             self.colorFunction.AddRGBPoint(self.maximum, 0, 0, 0)
 
-            self.opacityFunction = vtkPiecewiseFunction()
+            self.opacityFunction = vtkPiecewiseFunction() # @UndefinedVariable
             self.opacityFunction.AddPoint(self.minimum, 0)
             self.opacityFunction.AddPoint(self.maximum, 0)
 
