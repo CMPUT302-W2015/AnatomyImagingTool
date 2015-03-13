@@ -33,7 +33,7 @@ print("outgoing connection established")
 #after this point data can be sent freely
 while True:
     data = raw_input()
-    if len(data) == 0: break
+    #if len(data) == 0: break
     sock.send(data)
     
 sock.close()
