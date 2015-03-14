@@ -113,24 +113,26 @@ class vtkTimerHeadTrack():
                 
         elif sensorid == 1:
             
+            bleedValue = 10
+            
             mappedx = (dx*1000) + 150  #ImageDimensionMapper.mapValue(dx, -350, 450, "x")
             mappedy = (dy*1000) - 500  #ImageDimensionMapper.mapValue(dy, 300, 830, "y")
             mappedz = (dz*1000) - 80   #ImageDimensionMapper.mapValue(dz, -200, 500, "z")
             
-            if mappedx > GlobalVariables.imageXDist + 5:
-                mappedx = GlobalVariables.imageXDist + 5
-            if mappedx < -5:
-                mappedx = -5
+            if mappedx > GlobalVariables.imageXDist + bleedValue: # @UndefinedVariable
+                mappedx = GlobalVariables.imageXDist + bleedValue # @UndefinedVariable
+            if mappedx < -bleedValue:
+                mappedx = -bleedValue
                 
-            if mappedy > GlobalVariables.imageYDist + 5:
-                mappedy = GlobalVariables.imageYDist + 5
-            if mappedy < -5:
-                mappedy = -5
+            if mappedy > GlobalVariables.imageYDist + bleedValue: # @UndefinedVariable
+                mappedy = GlobalVariables.imageYDist + bleedValue # @UndefinedVariable
+            if mappedy < -bleedValue:
+                mappedy = -bleedValue
                 
-            if mappedz > GlobalVariables.imageZDist + 5:
-                mappedz = GlobalVariables.imageZDist + 5
-            if mappedz < -5:
-                mappedz = -5
+            if mappedz > GlobalVariables.imageZDist + bleedValue: # @UndefinedVariable
+                mappedz = GlobalVariables.imageZDist + bleedValue # @UndefinedVariable
+            if mappedz < -bleedValue:
+                mappedz = -bleedValue
                 
             self.lineactor.SetPosition(mappedx,mappedy,mappedz)
             
