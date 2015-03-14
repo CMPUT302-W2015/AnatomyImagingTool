@@ -2,6 +2,8 @@ import vtk, numpy as np
 import vrpn
 import math
 import GlobalVariables
+import ImageDimensionMapper
+import PlaneGenerator
 
 '''
 Created on Mar 10, 2015
@@ -80,18 +82,27 @@ class vtkTimerHeadTrack():
         else:
             sensorid = 0
         
-        qwxyz = np.array([qw,qx,qy,qz])        
-        vtk.vtkMath.QuaternionToMatrix3x3(qwxyz, self.rmatrix[0:3,0:3])
+        '''
+            Uses quaternion to adjust plane position
+        '''
+        #qwxyz = np.array([qw,qx,qy,qz])        
+        #vtk.vtkMath.QuaternionToMatrix3x3(qwxyz, self.rmatrix[0:3,0:3])
                
         '''
-        @todo: Make this adjust based on the pre-defined centre point
+        Uses custom class to map OptiTrack values to values within image
         '''
-        self.rmatrix[0,3] = 0*dx#1000*dx
-        self.rmatrix[1,3] = 0*dy#1000*dy
-        self.rmatrix[2,3] = 0*dz#1000*dz
+        '''
+        self.rmatrix[0,3] = dx#ImageDimensionMapper.mapValue(dx, -350, 450, "x") #0*dx#1000*dx
+        self.rmatrix[1,3] = dy#ImageDimensionMapper.mapValue(dy, 300, 830, "y") #0*dy#1000*dy
+        self.rmatrix[2,3] = dz#ImageDimensionMapper.mapValue(dz, -200, 500, "z") #0*dz#1000*dz
         self.rmatrix[3,3] = 1.0
+        '''
         
-        self.rmatrix = GlobalVariables.camMat4x4.dot(self.rmatrix) # @UndefinedVariable
+        print ("dx: " + str(dx*1000))
+        print ("dy: " + str(dy*1000))
+        print ("dz: " + str(dz*1000))
+        
+        #self.rmatrix = GlobalVariables.camMat4x4.dot(self.rmatrix) # @UndefinedVariable
         
         if sensorid == 0:
             self.text.SetInput("pos = (%-#6.3g, %-#6.3g, %-#6.3g)\n quaternion = (%-#6.3g, %-#6.3g, %-#6.3g, %-#6.3g)" % (dx, dy, dz, qw, qx, qy, qz))
@@ -102,15 +113,42 @@ class vtkTimerHeadTrack():
                 
         elif sensorid == 1:
             
+            mappedx = (dx*1000) + 150  #ImageDimensionMapper.mapValue(dx, -350, 450, "x")
+            mappedy = (dy*1000) - 500  #ImageDimensionMapper.mapValue(dy, 300, 830, "y")
+            mappedz = (dz*1000) - 80   #ImageDimensionMapper.mapValue(dz, -200, 500, "z")
+            
+            if mappedx > GlobalVariables.imageXDist + 5:
+                mappedx = GlobalVariables.imageXDist + 5
+            if mappedx < -5:
+                mappedx = -5
+                
+            if mappedy > GlobalVariables.imageYDist + 5:
+                mappedy = GlobalVariables.imageYDist + 5
+            if mappedy < -5:
+                mappedy = -5
+                
+            if mappedz > GlobalVariables.imageZDist + 5:
+                mappedz = GlobalVariables.imageZDist + 5
+            if mappedz < -5:
+                mappedz = -5
+                
+            self.lineactor.SetPosition(mappedx,mappedy,mappedz)
+            
+            '''
             transform = vtk.vtkTransform()
             
             self.rmatrix4x4.DeepCopy(self.rmatrix.reshape(16,1))
             
             transform.PostMultiply()
-            transform.Concatenate(self.rmatrix4x4)            
+            transform.Concatenate(self.rmatrix4x4)    
+            
+            self.lineactor.SetUserTransform(transform)
+            self.lineactor.Modified()            
+            
             
             transformCam = vtk.vtkTransform()            
             transformCam.Concatenate(self.rmatrix4x4)    
+            '''
             '''
             if self.button0state:
                                
@@ -128,7 +166,8 @@ class vtkTimerHeadTrack():
                 self.cam.Modified()
                 
             ''' 
-            if False:
+            '''
+            if True:
                 pass   
             else:
                 self.initialCameraTransformMatrix = transformCam
@@ -139,7 +178,8 @@ class vtkTimerHeadTrack():
                 self.lineactor.SetUserTransform(transform)
                 self.lineactor.Modified()     
                 
-            '''    
+            '''   
+            ''' 
             if self.button1state:
                 if self.initialZPosition:
                     scaleTransform = vtk.vtkTransform()
@@ -152,13 +192,15 @@ class vtkTimerHeadTrack():
                     self.cam.SetUserViewTransform(scaleTransform)
                     self.cam.Modified() 
             '''
-            if False:
+            '''
+            if True:
                 pass                       
 
             else:
                 self.initialZPosition = dz
                 self.initialScaleTransform = self.cam.GetUserViewTransform()  
             '''    
+            '''
             if self.button2state:
                 if self.master.distanceWidget.GetEnabled():
                     self.distanceWidgetInteraction(transform)
@@ -167,7 +209,8 @@ class vtkTimerHeadTrack():
                 else:
                     self.planeWidgetInteraction(transform)
             '''
-            self.text2.SetInput("pos = (%-#6.3g, %-#6.3g, %-#6.3g)\n quaternion = (%-#6.3g, %-#6.3g, %-#6.3g, %-#6.3g)" % (self.rmatrix4x4.GetElement(0, 3), self.rmatrix4x4.GetElement(1, 3), self.rmatrix4x4.GetElement(2, 3), qw, qx, qy, qz))
+            #self.text2.SetInput("pos = (%-#6.3g, %-#6.3g, %-#6.3g)\n quaternion = (%-#6.3g, %-#6.3g, %-#6.3g, %-#6.3g)" % (self.rmatrix4x4.GetElement(0, 3), self.rmatrix4x4.GetElement(1, 3), self.rmatrix4x4.GetElement(2, 3), qw, qx, qy, qz))
+            self.text2.SetInput("pos = (%-#6.3g, %-#6.3g, %-#6.3g)\n quaternion = (%-#6.3g, %-#6.3g, %-#6.3g, %-#6.3g)" % (dx, dy, dz, qw, qx, qy, qz))
 
     def distanceWidgetInteraction(self, transform):
         pt, pt1, pt2 = np.empty((3)), np.empty((3)), np.empty((3))

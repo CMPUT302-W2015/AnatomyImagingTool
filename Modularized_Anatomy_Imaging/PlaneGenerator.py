@@ -17,20 +17,16 @@ class PlaneGenerator(object):
         cube.SetXLength(120)
         cube.SetYLength(120)
         cube.SetZLength(0)
-        
 
-        
-        cubeTransform = vtk.vtkTransform()
-        cubeTransform.Translate(0, 0, 0)
+        #cubeTransform = vtk.vtkTransform()
+        #cubeTransform.Translate(0, 0, 0)
         
         cubeMapper = vtk.vtkPolyDataMapper()
         cubeMapper.SetInputConnection(cube.GetOutputPort())
                 
-
-        
         cubeTransformFilter = vtk.vtkTransformPolyDataFilter()
         cubeTransformFilter.SetInputConnection(cube.GetOutputPort())
-        cubeTransformFilter.SetTransform(cubeTransform)
+        #cubeTransformFilter.SetTransform(cubeTransform)
         
         appendFilter = vtk.vtkAppendPolyData()
         #appendFilter.AddInputConnection(line.GetOutputPort())
@@ -40,7 +36,6 @@ class PlaneGenerator(object):
         self.y = GlobalVariables.imageYDist/2.0 # @UndefinedVariable
         self.z = GlobalVariables.imageZDist/2.0 # @UndefinedVariable
         
-        
         self.cubeActor = vtk.vtkActor()
         self.cubeActor.SetMapper(cubeMapper)
         self.cubeActor.GetProperty().SetColor(0.2, 0.6, 0.8)
@@ -48,6 +43,9 @@ class PlaneGenerator(object):
 
     def getCubeActor(self):
         return self.cubeActor
+    
+    def setCubeActorPosition(self,x,y,z):
+        self.cubeActor.setPosition(x,y,z)
         
 def init():
     global planeGenerator
@@ -55,3 +53,6 @@ def init():
     
 def getCubeActor():
     return planeGenerator.getCubeActor()
+
+def setCubeActorPosition(self,x,y,z):
+        planeGenerator.cubeActor.setPosition(x,y,z)
