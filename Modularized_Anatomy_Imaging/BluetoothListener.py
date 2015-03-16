@@ -1,10 +1,11 @@
 import bluetooth
 import threading
+from PyQt4.QtCore import QThread
 
 """
 Note that each instantiation of this class creates a new thread. 
 """
-class BluetoothListener(threading.Thread):
+class BluetoothListener(QThread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.setDaemon()    #This makes it so that the thread auto-closes when
