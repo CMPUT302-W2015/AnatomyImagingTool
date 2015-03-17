@@ -3,7 +3,8 @@ import BluetoothListener
 import time
 
 BTL = BluetoothListener.BluetoothListener()
-BTS = BluetoothSender.BluetoothSender(address)
+BTL.start()
+BTS = BluetoothSender.BluetoothSender("ac:22:0b:57:fe:70")
 
 while True:
     time.sleep(5)

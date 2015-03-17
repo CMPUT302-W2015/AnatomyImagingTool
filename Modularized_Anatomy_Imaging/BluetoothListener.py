@@ -7,10 +7,12 @@ Note that each instantiation of this class creates a new thread.
 """
 class BluetoothListener(QThread):
     def __init__(self):
-        threading.Thread.__init__(self)
-        self.setDaemon()    #This makes it so that the thread auto-closes when
+        QThread.__init__(self)
+        #self.setDaemon()    #This makes it so that the thread auto-closes when
                             #the parent thread closes
     
+    def __del__(self):
+        self.wait()
     """
     As per the norm, this listener uses 2 sockets. server_sock listens for 
     connection attempts, and when it finds them, creates another socket,
