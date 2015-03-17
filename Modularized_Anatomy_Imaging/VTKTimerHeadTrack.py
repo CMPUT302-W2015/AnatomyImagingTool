@@ -16,13 +16,13 @@ class vtkTimerHeadTrack():
     tablet=vrpn.receiver.Tracker("Tablet@localhost:3883")
     
     
-    def __init__(self, cam, text, text2, lineactor, volume, master):
+    def __init__(self, cam, text, text2, actor, volume, master):
         self.text = text
         self.text2 = text2
         self.tracker.register_change_handler("tracker", self.callback, "position")
         self.tablet.register_change_handler("tablet", self.callback,"position")
         
-        self.lineactor = lineactor
+        self.actor = actor
         self.cam = cam
         self.master = master
         self.rmatrix = np.zeros((4,4))
@@ -119,7 +119,7 @@ class vtkTimerHeadTrack():
             mappedy = (dy*1000) - 500  #ImageDimensionMapper.mapValue(dy, 300, 830, "y")
             mappedz = (dz*1000) - 80   #ImageDimensionMapper.mapValue(dz, -200, 500, "z")
             
-            if mappedx > GlobalVariables.imageXDist + bleedValue: # @UndefinedVariable
+            '''if mappedx > GlobalVariables.imageXDist + bleedValue: # @UndefinedVariable
                 mappedx = GlobalVariables.imageXDist + bleedValue # @UndefinedVariable
             if mappedx < -bleedValue:
                 mappedx = -bleedValue
@@ -132,9 +132,9 @@ class vtkTimerHeadTrack():
             if mappedz > GlobalVariables.imageZDist + bleedValue: # @UndefinedVariable
                 mappedz = GlobalVariables.imageZDist + bleedValue # @UndefinedVariable
             if mappedz < -bleedValue:
-                mappedz = -bleedValue
+                mappedz = -bleedValue'''
                 
-            self.lineactor.SetPosition(mappedx,mappedy,mappedz)
+            self.actor.SetPosition(mappedx,mappedy,mappedz)
             
             '''
             transform = vtk.vtkTransform()
