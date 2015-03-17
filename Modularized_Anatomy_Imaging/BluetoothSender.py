@@ -10,7 +10,6 @@ class BluetoothSender():
         #search for server
         print("BTS:searching...")
 
-        print (uuid + " / " + addr)
         while True:
             service_matches = bluetooth.find_service( uuid = uuid, address = addr )
             if (len(service_matches) > 0): 
@@ -21,12 +20,12 @@ class BluetoothSender():
         port = first_match["port"] 
         name = first_match["name"]
         host = first_match["host"]
-        print("BTS:connecting to \"%s\" on %s..." %(name, host))
+        #print("BTS:connecting to \"%s\" on %s..." %(name, host))
 
         #connect to server
         self.sock=bluetooth.BluetoothSocket( bluetooth.RFCOMM )
         self.sock.connect((host, port))
-        print("BTS:connection established")
+        print("BTS:connected to \"%s\" on %s" %(name, host))
         
     def send(self, msg):
             self.sock.send(msg)

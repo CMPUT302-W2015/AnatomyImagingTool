@@ -24,14 +24,15 @@ class BluetoothListener(QThread):
         server_sock.listen(1)        
         port = server_sock.getsockname()[1]
         uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
-        bluetooth.advertise_service (server_sock, "SampleServer",
+        bluetooth.advertise_service (server_sock, "BluetoothListener",
                                      service_id = uuid,
                                      service_classes = [uuid, bluetooth.SERIAL_PORT_CLASS],
                                      profiles = [bluetooth.SERIAL_PORT_PROFILE]
                                      )           
-        print("BTL:waiting for connection on RFCOMM channel %d" % port)
+        print("BTL:waiting for connection on RFCOMM channel %d..." % port)
         client_sock, client_info = server_sock.accept()
-        print("BTL:accepted incoming connection from ", client_info)
+        client_info
+        print("BTL:connected to %s" %client_info[0])
         
         """
         this block will need to be rewritten depending on what we want to do
@@ -45,9 +46,10 @@ class BluetoothListener(QThread):
                 if data == "$": break
                 #instead of printing, this should call functions or change global variables
                 print("%s" % data)
+            print("Fail")
         except IOError:
             pass
 
         client_sock.close()
         server_sock.close()
-        print("incoming connection disconnected") 
+        print("BTL:connection closed") 
