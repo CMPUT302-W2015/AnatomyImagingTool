@@ -29,9 +29,9 @@ class BluetoothListener(QThread):
                                      service_classes = [uuid, bluetooth.SERIAL_PORT_CLASS],
                                      profiles = [bluetooth.SERIAL_PORT_PROFILE]
                                      )           
-        print("Waiting for incoming connection on RFCOMM channel %d" % port)
+        print("BTL:waiting for connection on RFCOMM channel %d" % port)
         client_sock, client_info = server_sock.accept()
-        print("Accepted incoming connection from ", client_info)
+        print("BTL:accepted incoming connection from ", client_info)
         
         """
         this block will need to be rewritten depending on what we want to do
