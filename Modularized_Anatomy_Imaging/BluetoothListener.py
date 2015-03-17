@@ -42,6 +42,7 @@ class BluetoothListener(QThread):
             while True:
                 data = client_sock.recv(1024)
                 if len(data) == 0: break
+                if data == "$": break
                 #instead of printing, this should call functions or change global variables
                 print("%s" % data)
         except IOError:
