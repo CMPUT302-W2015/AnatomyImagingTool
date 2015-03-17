@@ -11,10 +11,10 @@ class BluetoothSender():
         print("searching for device...")
 
         print (uuid + " / " + addr)
-        service_matches = bluetooth.find_service( uuid = uuid, address = addr )
-        if (len(service_matches) == 0): 
-            print("no device found :(")
-            sys.exit(0)
+        while True:
+            service_matches = bluetooth.find_service( uuid = uuid, address = addr )
+            if (len(service_matches) > 0): 
+                break
         print("device found")
 
         #setup parameter for outgoing connection
