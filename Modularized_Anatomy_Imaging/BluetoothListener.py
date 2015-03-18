@@ -42,14 +42,18 @@ class BluetoothListener(QThread):
         try:
             while True:
                 data = client_sock.recv(1024)
-                if len(data) == 0: break
-                if data == "$": break
+                if len(data) == 0: 
+                    #print("len0")
+                    break
+                if data == "$": 
+                    #print("term")
+                    break
                 #instead of printing, this should call functions or change global variables
                 print("%s" % data)
-            print("Fail")
         except IOError:
             pass
 
         client_sock.close()
         server_sock.close()
         print("BTL:connection closed") 
+        print("Server Thread Closed")

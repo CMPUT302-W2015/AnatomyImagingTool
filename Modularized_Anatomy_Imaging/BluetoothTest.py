@@ -15,8 +15,7 @@ BTS.send("testing1")
 time.sleep(5)
 BTS.send("testing2")
 time.sleep(5)
-BTS.send("$")
 BTS.disconnect()
-time.sleep(5) #this is required for proper listener closure
+BTL.wait() #this is required for proper listener closure
 
-print("Program Closed")
+print("Main Thread Closed")
