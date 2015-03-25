@@ -118,7 +118,7 @@ class vtkTimerHeadTrack():
             mappedx = (dx*1000) + 150  #ImageDimensionMapper.mapValue(dx, -350, 450, "x")
             mappedy = (dy*1000) - 500  #ImageDimensionMapper.mapValue(dy, 300, 830, "y")
             mappedz = (dz*1000) - 80   #ImageDimensionMapper.mapValue(dz, -200, 500, "z")
-            
+            '''
             '''if mappedx > GlobalVariables.imageXDist + bleedValue: # @UndefinedVariable
                 mappedx = GlobalVariables.imageXDist + bleedValue # @UndefinedVariable
             if mappedx < -bleedValue:
@@ -132,11 +132,11 @@ class vtkTimerHeadTrack():
             if mappedz > GlobalVariables.imageZDist + bleedValue: # @UndefinedVariable
                 mappedz = GlobalVariables.imageZDist + bleedValue # @UndefinedVariable
             if mappedz < -bleedValue:
-                mappedz = -bleedValue'''
-                
+                mappedz = -bleedValue
+             
             self.actor.SetPosition(mappedx,mappedy,mappedz)
-            
             '''
+
             transform = vtk.vtkTransform()
             
             self.rmatrix4x4.DeepCopy(self.rmatrix.reshape(16,1))
@@ -150,7 +150,7 @@ class vtkTimerHeadTrack():
             
             transformCam = vtk.vtkTransform()            
             transformCam.Concatenate(self.rmatrix4x4)    
-            '''
+
             '''
             if self.button0state:
                                
@@ -166,6 +166,7 @@ class vtkTimerHeadTrack():
                 stylusTransform.Update()                
                 self.cam.SetUserViewTransform(stylusTransform)
                 self.cam.Modified()
+            '''
                 
             '''
             if True:
