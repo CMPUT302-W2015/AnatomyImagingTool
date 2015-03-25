@@ -85,23 +85,23 @@ class vtkTimerHeadTrack():
         '''
             Uses quaternion to adjust plane position
         '''
-        #qwxyz = np.array([qw,qx,qy,qz])        
-        #vtk.vtkMath.QuaternionToMatrix3x3(qwxyz, self.rmatrix[0:3,0:3])
+        qwxyz = np.array([qw,qx,qy,qz])        
+        vtk.vtkMath.QuaternionToMatrix3x3(qwxyz, self.rmatrix[0:3,0:3])
                
-        '''
-        Uses custom class to map OptiTrack values to values within image
-        '''
-        '''
-        self.rmatrix[0,3] = dx#ImageDimensionMapper.mapValue(dx, -350, 450, "x") #0*dx#1000*dx
-        self.rmatrix[1,3] = dy#ImageDimensionMapper.mapValue(dy, 300, 830, "y") #0*dy#1000*dy
-        self.rmatrix[2,3] = dz#ImageDimensionMapper.mapValue(dz, -200, 500, "z") #0*dz#1000*dz
-        self.rmatrix[3,3] = 1.0
-        '''
         
+        #Uses custom class to map OptiTrack values to values within image
+        
+        
+        self.rmatrix[0,3] = (dx*1000) + 150#dx#ImageDimensionMapper.mapValue(dx, -350, 450, "x") #0*dx#1000*dx
+        self.rmatrix[1,3] = (dy*1000) - 500#dy#ImageDimensionMapper.mapValue(dy, 300, 830, "y") #0*dy#1000*dy
+        self.rmatrix[2,3] = (dz*1000) - 80#dz#ImageDimensionMapper.mapValue(dz, -200, 500, "z") #0*dz#1000*dz
+        self.rmatrix[3,3] = 1.0
+        
+        '''
         print ("dx: " + str(dx*1000))
         print ("dy: " + str(dy*1000))
         print ("dz: " + str(dz*1000))
-        
+        '''
         #self.rmatrix = GlobalVariables.camMat4x4.dot(self.rmatrix) # @UndefinedVariable
         
         if sensorid == 0:
@@ -112,7 +112,7 @@ class vtkTimerHeadTrack():
                 
                 
         elif sensorid == 1:
-            
+            '''
             bleedValue = 10
             
             mappedx = (dx*1000) + 150  #ImageDimensionMapper.mapValue(dx, -350, 450, "x")
@@ -167,7 +167,6 @@ class vtkTimerHeadTrack():
                 self.cam.SetUserViewTransform(stylusTransform)
                 self.cam.Modified()
                 
-            ''' 
             '''
             if True:
                 pass   
