@@ -7,7 +7,9 @@ Created on March 10th, 2015
 '''
 def init():
     import numpy as np
+    import BluetoothSender
 
+    global BTS
     global isprojector
     global initfdir 
     global initddir
@@ -21,6 +23,7 @@ def init():
     global imageYDist
     global imageZDist
     
+    #BTS = BluetoothSender.BluetoothSender()
     isprojector = False
     initfdir = ''
     initddir = ''

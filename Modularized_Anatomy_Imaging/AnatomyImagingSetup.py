@@ -1,9 +1,11 @@
 import sys
 import GlobalVariables
 import TDViz
+import BluetoothListener
 
 from PyQt4.QtGui import QApplication
 from PyQt4.QtCore import QFile, QLatin1String
+
 
 '''
 Created on Mar 10, 2015
@@ -13,6 +15,8 @@ Created on Mar 10, 2015
 def main():
 
     GlobalVariables.init()
+    
+    BTL = BluetoothListener.BluetoothListener()
    
     app = QApplication([])
 
