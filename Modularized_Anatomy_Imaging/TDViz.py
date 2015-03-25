@@ -245,8 +245,8 @@ class TDVizCustom(TDViz):
         
     def initTabletPlane(self):
         
-        PlaneGenerator.init() # @UndefinedVariable  
-        self.cubeActor = PlaneGenerator.getCubeActor() # @UndefinedVariable  
+        PlaneGenerator.init() # @UndefinedVariable 
+        self.cubeActor = PlaneGenerator.getCubeActor() # @UndefinedVariable
         self._ren.AddActor(self.cubeActor)
         
         '''
@@ -325,7 +325,7 @@ class TDVizCustom(TDViz):
             self.planeWidget[i].SetInteractor(self._iren)
             self.planeWidget[i].SetPlaceFactor(1.1)
             self.planeWidget[i].TubingOff()
-            self.planeWidget[i].DrawPlaneOff()
+            #self.planeWidget[i].DrawPlaneOff()
             self.planeWidget[i].OutsideBoundsOff()  
             self.planeWidget[i].OutlineTranslationOff() 
             self.planeWidget[i].ScaleEnabledOff()

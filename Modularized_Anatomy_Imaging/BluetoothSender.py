@@ -8,32 +8,31 @@ class BluetoothSender():
         uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 
         #search for server
-        print("searching for device...")
+        print("BTS:searching...")
 
-        print (uuid + " / " + addr)
-        service_matches = bluetooth.find_service( uuid = uuid, address = addr )
-        if (len(service_matches) == 0): 
-            print("no device found :(")
-            sys.exit(0)
-        print("device found")
+        while True:
+            service_matches = bluetooth.find_service( uuid = uuid, address = addr )
+            if (len(service_matches) > 0): 
+                break
 
         #setup parameter for outgoing connection
         first_match = service_matches[0]
         port = first_match["port"] 
         name = first_match["name"]
         host = first_match["host"]
-        print("setting up outgoing connection to \%s\" on %s..." %(name, host))
+        #print("BTS:connecting to \"%s\" on %s..." %(name, host))
 
         #connect to server
         self.sock=bluetooth.BluetoothSocket( bluetooth.RFCOMM )
         self.sock.connect((host, port))
-        print("outgoing connection established")
+        print("BTS:connected to \"%s\" on %s" %(name, host))
         
-        def send(self, msg):
+    def send(self, msg):
             self.sock.send(msg)
             
-        def disconnect(self):
+    def disconnect(self):
+            self.sock.send("$")
             self.sock.close()
-            print("outgoing bluetooth connection closed")
+            print("BTS:connection closed")
             
             
