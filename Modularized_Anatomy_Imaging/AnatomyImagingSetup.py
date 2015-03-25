@@ -15,8 +15,6 @@ Created on Mar 10, 2015
 def main():
 
     GlobalVariables.init()
-    
-    BTL = BluetoothListener.BluetoothListener()
    
     app = QApplication([])
 

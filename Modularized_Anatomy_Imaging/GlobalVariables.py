@@ -8,8 +8,10 @@ Created on March 10th, 2015
 def init():
     import numpy as np
     import BluetoothSender
-
+    import BluetoothListener
+    
     global BTS
+    global BTL
     global isprojector
     global initfdir 
     global initddir
@@ -23,7 +25,10 @@ def init():
     global imageYDist
     global imageZDist
     
-    #BTS = BluetoothSender.BluetoothSender()
+    BTS = BluetoothSender.BluetoothSender()
+    BTL = BluetoothListener.BluetoothListener()
+    BTL.start()
+    
     isprojector = False
     initfdir = ''
     initddir = ''

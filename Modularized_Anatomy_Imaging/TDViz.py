@@ -175,7 +175,12 @@ class TDVizCustom(TDViz):
         self._renWin.AddRenderer(self._ren)
         
         self._iren = self._renWin.GetInteractor()  
-        self._iren.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
+        """
+        This line used to have vtk.vtkInteractorStyleTrackballCamera()
+        switching it made it so the mouse controls the actor instead of
+        camera
+        """
+        self._iren.SetInteractorStyle(vtk.vtkInteractorStyleTrackballActor())
         self.removeAllMouseEvents(self._iren)
         
         self.sopuid = []
@@ -565,6 +570,15 @@ class TDVizCustom(TDViz):
         dim_x, dim_y, dim_z, number_of_frames = header.Columns, header.Rows, header[0x3001, 0x1001].value, header.NumberOfFrames
         raw = np.fromstring(header.PixelData, dtype=np.uint8)
         return np.reshape(raw, (dim_x, dim_y, dim_z, number_of_frames), order="F"), (10*spacing_x, 10*spacing_y, 10*spacing_z), header.SOPInstanceUID
+    
+    """
+    Need to capture close event and make sure bluetooth threads close properly
+    """
+    def closeEvent(self, event):
+        GlobalVariables.BTS.disconnect() # @UndefinedVariable
+        GlobalVariables.BTL.wait() # @UndefinedVariable
+        event.accept()
+
     
     def loadEcho(self):        
         options = QFileDialog.Options()

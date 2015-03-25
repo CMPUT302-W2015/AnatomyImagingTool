@@ -71,11 +71,18 @@ class vtkTimerHeadTrack():
     
     def callback(self, userdata, data):
         
-        print str(userdata)
-        print str(data)
+        #print str(userdata)
+        #print str(data)
 
         dx, dy, dz = data['position']
-        qx, qy, qz, qw = data['quaternion']  
+        qx, qy, qz, qw = data['quaternion']
+        
+        msg = str(dx) + "," + str(dy) + "," + str(dz) + "," + str(qx) + "," + str(qy) + "," + str(qz) + "," + str(qw) 
+        
+        """
+        send data to tablet
+        """
+        GlobalVariables.BTS.send(msg) # @UndefinedVariable
          
         if str(userdata) == "tablet":
             sensorid = 1
@@ -144,12 +151,12 @@ class vtkTimerHeadTrack():
             transform.PostMultiply()
             transform.Concatenate(self.rmatrix4x4)    
             
-            self.lineactor.SetUserTransform(transform)
-            self.lineactor.Modified()            
+            self.actor.SetUserTransform(transform)
+            self.actor.Modified()            
             
             
-            transformCam = vtk.vtkTransform()            
-            transformCam.Concatenate(self.rmatrix4x4)    
+            #transformCam = vtk.vtkTransform()            
+            #transformCam.Concatenate(self.rmatrix4x4)    
 
             '''
             if self.button0state:
