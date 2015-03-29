@@ -22,11 +22,12 @@ class PlaneGenerator(object):
         self.planeWidget = vtk.vtkImplicitPlaneWidget()
         #self.planeWidget.SetInteractor(self._iren)
         #self.planeWidget.SetPlaceFactor(1.1)
-        #self.planeWidget.TubingOff()
+        self.planeWidget.TubingOff()
         #self.planeWidget.DrawPlaneOff()
         #self.planeWidget.OutsideBoundsOff()  
-        #self.planeWidget.OutlineTranslationOff() 
-        #self.planeWidget.ScaleEnabledOff()
+        self.planeWidget.OutlineTranslationOff() 
+        self.planeWidget.ScaleEnabledOff()
+        #self.planeWidget.HandlesOff()
         #self.planeWidget.SetHandleSize(0.25*self.planeWidget.GetHandleSize())
         #self.planeWidget.SetKeyPressActivationValue(str(1))
         #self.planeWidget.SetInteractor(self._iren)
@@ -72,10 +73,10 @@ class PlaneGenerator(object):
         #return self.cubeActor
     
     def setPlanePosition(self,x,y,z):
-        self.planeWidget.PlaceWidget(-2*x,x*2,-2*y,y*2,-2*z,z*2) # @UndefinedVariable
+        self.planeWidget.PlaceWidget(-2*x,x*4,-2*y,y*4,-2*z,z*4) # @UndefinedVariable
         #self.planeWidget.SetOrigin(x*2,y*2,z*2)
-        #self.planeWidget.SetNormal(1,0,0)
-        self.planeWidget.UpdatePlacement()
+        #self.planeWidget.SetNormal(0,0,0)
+        #self.planeWidget.UpdatePlacement()
         self.planeWidget.On()
         
         
