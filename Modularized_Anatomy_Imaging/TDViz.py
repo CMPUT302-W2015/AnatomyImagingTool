@@ -246,45 +246,10 @@ class TDVizCustom(TDViz):
     def initTabletPlane(self):
         
         PlaneGenerator.init() # @UndefinedVariable 
-        self.cubeActor = PlaneGenerator.getCubeActor() # @UndefinedVariable
-        self._ren.AddActor(self.cubeActor)
-        
-        '''
-        cube = vtk.vtkCubeSource()
-        cube.SetXLength(120)
-        cube.SetYLength(120)
-        cube.SetZLength(0)
-        
-
-        
-        cubeTransform = vtk.vtkTransform()
-        cubeTransform.Translate(0, 0, 0)
-        
-        cubeMapper = vtk.vtkPolyDataMapper()
-        cubeMapper.SetInputConnection(cube.GetOutputPort())
-                
-
-        
-        cubeTransformFilter = vtk.vtkTransformPolyDataFilter()
-        cubeTransformFilter.SetInputConnection(cube.GetOutputPort())
-        cubeTransformFilter.SetTransform(cubeTransform)
-        
-        appendFilter = vtk.vtkAppendPolyData()
-        #appendFilter.AddInputConnection(line.GetOutputPort())
-        appendFilter.AddInputConnection(cubeTransformFilter.GetOutputPort())
-       
-        self.x = GlobalVariables.imageXDist/2.0 # @UndefinedVariable
-        self.y = GlobalVariables.imageYDist/2.0 # @UndefinedVariable
-        self.z = GlobalVariables.imageZDist/2.0 # @UndefinedVariable
-        
-        
-        self.cubeActor = vtk.vtkActor()
-        self.cubeActor.SetMapper(cubeMapper)
-        self.cubeActor.GetProperty().SetColor(0.2, 0.6, 0.8)
-        self.cubeActor.SetPosition(self.x,self.y,self.z)#(self.sampleSpacing[0]/2,self.sampleSpacing[1]/2,self.sampleSpacing[2]/2)#(-30, -30, -150) #(70,90,50)
-        '''
-               
-        
+        self.tabletPlane = PlaneGenerator.getPlane() # @UndefinedVariable
+        self.tabletPlane.setPlaneInteractor(self._iren)       
+        self._renWin.Render() 
+        #self.planeWidget.PlaceWidget(0,GlobalVariables.imageXDist,0,GlobalVariables.imageYDist,0,GlobalVariables.imageZDist) # @UndefinedVariable
        
     def cameraAnyEvent(self,obj,evt):
         self.cameraText.SetInput("Orientation X = %5.0f\nOrientation Y = %5.0f\nOrientation Z = %5.0f" % (obj.GetOrientation()[0],obj.GetOrientation()[1],obj.GetOrientation()[2]))
@@ -760,7 +725,7 @@ class TDVizCustom(TDViz):
         self.distanceWidget.GetDistanceRepresentation().SetPoint2WorldPosition(np.array([0,0,-200])) 
                       
         
-        headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, self)
+        headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.planeWidget, self.volume, self)
         headtrack.renderer = self._ren
         self._iren.AddObserver('TimerEvent', headtrack.execute)
         self._iren.CreateRepeatingTimer(20)  
