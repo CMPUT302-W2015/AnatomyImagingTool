@@ -10,7 +10,7 @@ from PyQt4.QtCore import QFile, QLatin1String
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+@author: Bradley is a loser
 '''
 def main():
 

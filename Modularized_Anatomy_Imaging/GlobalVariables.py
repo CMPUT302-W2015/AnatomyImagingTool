@@ -25,9 +25,9 @@ def init():
     global imageYDist
     global imageZDist
     
-    BTS = BluetoothSender.BluetoothSender()
-    BTL = BluetoothListener.BluetoothListener()
-    BTL.start()
+    #BTS = BluetoothSender.BluetoothSender()
+    #BTL = BluetoothListener.BluetoothListener()
+    #BTL.start()
     
     isprojector = False
     initfdir = ''

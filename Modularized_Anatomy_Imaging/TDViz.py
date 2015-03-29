@@ -180,7 +180,8 @@ class TDVizCustom(TDViz):
         switching it made it so the mouse controls the actor instead of
         camera
         """
-        self._iren.SetInteractorStyle(vtk.vtkInteractorStyleTrackballActor())
+        #self._iren.SetInteractorStyle(vtk.vtkInteractorStyleTrackballActor())
+        self._iren.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
         self.removeAllMouseEvents(self._iren)
         
         self.sopuid = []
@@ -575,8 +576,8 @@ class TDVizCustom(TDViz):
     Need to capture close event and make sure bluetooth threads close properly
     """
     def closeEvent(self, event):
-        GlobalVariables.BTS.disconnect() # @UndefinedVariable
-        GlobalVariables.BTL.wait() # @UndefinedVariable
+       # GlobalVariables.BTS.disconnect() # @UndefinedVariable
+       # GlobalVariables.BTL.wait() # @UndefinedVariable
         event.accept()
 
     
