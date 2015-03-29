@@ -248,8 +248,8 @@ class TDVizCustom(TDViz):
         PlaneGenerator.init() # @UndefinedVariable 
         self.tabletPlane = PlaneGenerator.getPlane() # @UndefinedVariable
         self.tabletPlane.setPlaneInteractor(self._iren)       
+        self.tabletPlane.setPlanePosition(GlobalVariables.imageXDist/2, GlobalVariables.imageYDist/2, GlobalVariables.imageZDist/2) # @UndefinedVariable
         self._renWin.Render() 
-        #self.planeWidget.PlaceWidget(0,GlobalVariables.imageXDist,0,GlobalVariables.imageYDist,0,GlobalVariables.imageZDist) # @UndefinedVariable
        
     def cameraAnyEvent(self,obj,evt):
         self.cameraText.SetInput("Orientation X = %5.0f\nOrientation Y = %5.0f\nOrientation Z = %5.0f" % (obj.GetOrientation()[0],obj.GetOrientation()[1],obj.GetOrientation()[2]))

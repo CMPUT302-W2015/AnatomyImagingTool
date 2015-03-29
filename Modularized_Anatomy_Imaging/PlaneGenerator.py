@@ -65,7 +65,6 @@ class PlaneGenerator(object):
         
     def setPlaneInteractor(self, interactor):
         self.planeWidget.SetInteractor(interactor) 
-        self.planeWidget.PlaceWidget(0,GlobalVariables.imageXDist,0,GlobalVariables.imageYDist,0,GlobalVariables.imageZDist) # @UndefinedVariable
         self.planeWidget.UpdatePlacement() 
 
     def getPlane(self):
@@ -73,8 +72,12 @@ class PlaneGenerator(object):
         #return self.cubeActor
     
     def setPlanePosition(self,x,y,z):
-        pass
-        #self.planeActor.setPosition(x,y,z)
+        self.planeWidget.PlaceWidget(-2*x,x*2,-2*y,y*2,-2*z,z*2) # @UndefinedVariable
+        #self.planeWidget.SetOrigin(x*2,y*2,z*2)
+        #self.planeWidget.SetNormal(1,0,0)
+        self.planeWidget.UpdatePlacement()
+        self.planeWidget.On()
+        
         
 def init():
     global planeGenerator
@@ -85,5 +88,4 @@ def getPlane():
     #return planeGenerator.getCubeActor()
 
 def setPlanePosition(self,x,y,z):
-        pass
-        #planeGenerator.planeActor.setPosition(x,y,z)
+        planeGenerator.setPosition(x,y,z)
