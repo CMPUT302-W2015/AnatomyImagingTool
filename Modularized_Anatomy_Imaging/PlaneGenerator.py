@@ -20,7 +20,6 @@ class PlaneGenerator(object):
         self.plane.UpdatePlacement() 
         '''
         self.planeWidget = vtk.vtkImplicitPlaneWidget()
-        #self.planeWidget.SetInteractor(self._iren)
         #self.planeWidget.SetPlaceFactor(1.1)
         self.planeWidget.TubingOff()
         #self.planeWidget.DrawPlaneOff()
@@ -28,9 +27,8 @@ class PlaneGenerator(object):
         self.planeWidget.OutlineTranslationOff() 
         self.planeWidget.ScaleEnabledOff()
         #self.planeWidget.HandlesOff()
-        #self.planeWidget.SetHandleSize(0.25*self.planeWidget.GetHandleSize())
+        self.planeWidget.SetHandleSize(0.25*self.planeWidget.GetHandleSize())
         #self.planeWidget.SetKeyPressActivationValue(str(1))
-        #self.planeWidget.SetInteractor(self._iren)
         #self.planeWidget.AddObserver("InteractionEvent", self.pwCallback)  
                 
         
