@@ -249,6 +249,7 @@ class TDVizCustom(TDViz):
         self.tabletPlane = PlaneGenerator.getPlane() # @UndefinedVariable
         self.tabletPlane.setPlaneInteractor(self._iren)       
         self.tabletPlane.setPlanePosition(GlobalVariables.imageXDist/2, GlobalVariables.imageYDist/2, GlobalVariables.imageZDist/2) # @UndefinedVariable
+        self.planeActor = self.tabletPlane.getPlaneActor()
         self._renWin.Render() 
        
     def cameraAnyEvent(self,obj,evt):
@@ -725,7 +726,7 @@ class TDVizCustom(TDViz):
         self.distanceWidget.GetDistanceRepresentation().SetPoint2WorldPosition(np.array([0,0,-200])) 
                       
         
-        headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.planeWidget, self.volume, self)
+        headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.planeActor, self.volume, self)
         headtrack.renderer = self._ren
         self._iren.AddObserver('TimerEvent', headtrack.execute)
         self._iren.CreateRepeatingTimer(20)  

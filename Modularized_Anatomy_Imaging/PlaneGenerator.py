@@ -13,12 +13,17 @@ class PlaneGenerator(object):
 
     def __init__(self):
             
-        '''
+        
         self.plane = vtk.vtkPlane()
-        self.plane.SetOrigin(0,0,0) #Add arguments
-        self.plane.SetNormal(0,0,0) #Add arguments
-        self.plane.UpdatePlacement() 
-        '''
+        self.plane.SetOrigin(0,0,0)
+        self.plane.SetNormal(0,0,0) 
+        #self.plane.UpdatePlacement() 
+        
+        
+        self.x = GlobalVariables.imageXDist/2.0 # @UndefinedVariable
+        self.y = GlobalVariables.imageYDist/2.0 # @UndefinedVariable
+        self.z = GlobalVariables.imageZDist/2.0 # @UndefinedVariable
+        
         self.planeWidget = vtk.vtkImplicitPlaneWidget()
         #self.planeWidget.SetPlaceFactor(1.1)
         self.planeWidget.TubingOff()
@@ -29,8 +34,23 @@ class PlaneGenerator(object):
         #self.planeWidget.HandlesOff()
         self.planeWidget.SetHandleSize(0.25*self.planeWidget.GetHandleSize())
         #self.planeWidget.SetKeyPressActivationValue(str(1))
-        #self.planeWidget.AddObserver("InteractionEvent", self.pwCallback)  
-                
+        #self.planeWidget.AddObserver("InteractionEvent", self.pwCallback)
+        
+        #create cutter
+        self.cutter=vtk.vtkCutter()
+        self.cutter.SetCutFunction(self.planeWidget.GetPlane(self.plane))
+        #cutter.SetInputConnection(cube.GetOutputPort())
+        self.cutter.Update()
+        self.cutterMapper=vtk.vtkPolyDataMapper()
+        #self.cutterMapper.SetInputConnection(self.cutter.GetOutputPort())
+        
+        #create plane actor
+        self.planeActor=vtk.vtkActor()
+        self.planeActor.GetProperty().SetColor(1.0,1,0)
+        self.planeActor.GetProperty().SetLineWidth(2)
+        self.planeActor.SetMapper(self.cutterMapper)
+        self.planeActor.SetPosition(self.x,self.y,self.z)
+        
         
         '''
         cube = vtk.vtkCubeSource()
@@ -76,6 +96,9 @@ class PlaneGenerator(object):
         #self.planeWidget.SetNormal(0,0,0)
         #self.planeWidget.UpdatePlacement()
         self.planeWidget.On()
+        
+    def getPlaneActor(self):
+        return self.planeActor
         
         
 def init():
