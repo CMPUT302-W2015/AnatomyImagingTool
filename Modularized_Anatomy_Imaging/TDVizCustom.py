@@ -78,13 +78,7 @@ class TDVizCustom(TDViz):
         self._renWin.Render()  
      
      
-         """
-    Need to capture close event and make sure bluetooth threads close properly
-    """
-    def closeEvent(self, event):
-        GlobalVariables.BTS.disconnect() # @UndefinedVariable
-        GlobalVariables.BTL.wait() # @UndefinedVariable
-        event.accept()
+
         
     def removeAllMouseEvents(self, obj):        
         '''obj.RemoveObservers('LeftButtonPressEvent')

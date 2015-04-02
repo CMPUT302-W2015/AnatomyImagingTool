@@ -1,6 +1,7 @@
 import bluetooth
 import threading
 from PyQt4.QtCore import QThread
+import GlobalVariables
 
 """
 Note that each instantiation of this class creates a new thread. 

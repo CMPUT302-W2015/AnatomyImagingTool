@@ -5,9 +5,17 @@ import vtk, dicom, numpy as np, glob, xml.etree.ElementTree as ET, os, datetime
 from PySide.QtGui import QGridLayout as pysideQGridLayout
 import GlobalVariables
 import CropControlItems, CommonControlItems, PositionControlItems, TransferFunctionControlItems, PlaneWidgetControlItems, PlayControlItems
-import SmoothingControlItems, LightingControlItems, ViewControlItems, LabelControlItems, VtkTimerCallBack, VTKTimerHeadTrack, TransferFunctionEditor
+import SmoothingControlItems, LightingControlItems, ViewControlItems, LabelControlItems, VtkTimerCallBack, TransferFunctionEditor
 import OpacityEditor, GradientOpacityEditor, ColorEditor, PlaneGenerator
+import platform
 
+
+if platform.machine().endswith("64"):
+    device = "TV"
+else:
+    device = "tablet"
+if device == "TV":
+        import VTKTimerHeadTrack
 '''
 Created on Mar 10, 2015
 
@@ -213,8 +221,8 @@ class TDVizCustom(TDViz):
         
         
         
-        
-        self.initHeadTrackText()
+        if device == "TV":
+            self.initHeadTrackText()
         
         self._renWin.Render()  
         
@@ -300,6 +308,15 @@ class TDVizCustom(TDViz):
             self.planeWidget[i].SetInteractor(self._iren)
             self.planeWidget[i].AddObserver("InteractionEvent", self.pwCallback)  
             self.pwClippingPlanes.AddItem(self.pwPlane[i])
+    """
+    Need to capture close event and make sure bluetooth threads close properly
+    """
+    def closeEvent(self, event):
+        GlobalVariables.BTS.disconnect() # @UndefinedVariable
+        print("before")
+        GlobalVariables.BTL.wait() # @UndefinedVariable
+        print("after")
+        event.accept() 
             
     def initSphereWidget(self):
         self.lightkit = vtk.vtkLightKit()
@@ -725,11 +742,11 @@ class TDVizCustom(TDViz):
         self.distanceWidget.GetDistanceRepresentation().SetPoint1WorldPosition(np.array([0,0,-100]))
         self.distanceWidget.GetDistanceRepresentation().SetPoint2WorldPosition(np.array([0,0,-200])) 
                       
-        
-        headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.planeActor, self.volume, self)
-        headtrack.renderer = self._ren
-        self._iren.AddObserver('TimerEvent', headtrack.execute)
-        self._iren.CreateRepeatingTimer(20)  
+        if device == "TV":
+            headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.planeActor, self.volume, self)
+            headtrack.renderer = self._ren
+            self._iren.AddObserver('TimerEvent', headtrack.execute)
+            self._iren.CreateRepeatingTimer(20)  
                  
         
         self._renWin.Render()  

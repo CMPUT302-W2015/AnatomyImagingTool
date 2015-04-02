@@ -1,5 +1,6 @@
 import bluetooth
 import platform
+import GlobalVariables
 
 class BluetoothSender():
     def __init__(self):
@@ -7,7 +8,7 @@ class BluetoothSender():
         TV_ADDRESS = "00:1B:DC:0F:2A:E8"
         TABLET_ADDRESS = "AC:22:0B:57:FE:70"
 
-        if (platform.machine().endswith("64")):
+        if GlobalVariables.device == "TV":
             addr = TABLET_ADDRESS
             print("I'm a TV")  
         else:
