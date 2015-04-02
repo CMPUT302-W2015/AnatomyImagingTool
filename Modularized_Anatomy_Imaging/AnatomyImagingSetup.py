@@ -14,6 +14,8 @@ def main():
 
     GlobalVariables.init()
    
+   
+   
     app = QApplication([])
 
     File = QFile("darkorange.stylesheet")

@@ -1,5 +1,6 @@
 #Global variables for everything related to AnatomyImagingSetup
-
+import BluetoothSender
+import BluetoothListener
 '''
 Created on March 10th, 2015
 
@@ -7,6 +8,9 @@ Created on March 10th, 2015
 '''
 def init():
     import numpy as np
+
+    global BTL
+    global BTS
 
     global isprojector
     global initfdir 
@@ -20,6 +24,10 @@ def init():
     global imageXDist
     global imageYDist
     global imageZDist
+    
+    BTL = BluetoothListener.BluetoothListener()
+    BTS = BluetoothSender.BluetoothSender()
+    BTL.start()
     
     isprojector = False
     initfdir = ''
