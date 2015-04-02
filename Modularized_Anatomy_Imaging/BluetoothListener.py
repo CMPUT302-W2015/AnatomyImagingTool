@@ -45,7 +45,8 @@ class BluetoothListener(QThread):
                 if len(data) == 0: 
                     #print("len0")
                     break
-                if data == "$": 
+                if data == "$":
+                    GlobalVariables.BTS.send("$") 
                     #print("term")
                     break
                 #instead of printing, this should call functions or change global variables
