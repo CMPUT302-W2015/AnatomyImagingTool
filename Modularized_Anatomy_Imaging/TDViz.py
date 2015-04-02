@@ -312,11 +312,10 @@ class TDVizCustom(TDViz):
     Need to capture close event and make sure bluetooth threads close properly
     """
     def closeEvent(self, event):
-        if GlobalVariables.BTL.isFinished() == False:
+        if GlobalVariables.online == True and GlobalVariables.BTL.isFinished() == False:
             GlobalVariables.BTS.disconnect() # @UndefinedVariable
-            print("before")
             GlobalVariables.BTL.wait() # @UndefinedVariable
-            print("after")
+        print("Main Thread Closed")
         event.accept() 
             
     def initSphereWidget(self):

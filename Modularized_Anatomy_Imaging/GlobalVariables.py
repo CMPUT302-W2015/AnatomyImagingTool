@@ -13,6 +13,7 @@ def init():
     global device
     global BTL
     global BTS
+    global online
     
 
     global isprojector
@@ -28,10 +29,12 @@ def init():
     global imageYDist
     global imageZDist
     
+    online = False #this is used by the handler for the close button also
     device = Architecture.get()
-    BTL = BluetoothListener.BluetoothListener()
-    BTL.start()
-    BTS = BluetoothSender.BluetoothSender()
+    if online == True:
+        BTL = BluetoothListener.BluetoothListener()
+        BTL.start()
+        BTS = BluetoothSender.BluetoothSender()
     
     isprojector = False
     initfdir = ''
