@@ -15,8 +15,8 @@ class PlaneGenerator(object):
             
         
         self.plane = vtk.vtkPlane()
-        self.plane.SetOrigin(0,0,0)
-        self.plane.SetNormal(0,0,0) 
+        #self.plane.SetOrigin(0,0,0)
+        #self.plane.SetNormal(0,0,0)
         #self.plane.UpdatePlacement() 
         
         
@@ -46,7 +46,7 @@ class PlaneGenerator(object):
         
         #create plane actor
         self.planeActor=vtk.vtkActor()
-        self.planeActor.GetProperty().SetColor(1.0,1,0)
+        self.planeActor.GetProperty().SetColor(0.2, 0.6, 0.8)
         self.planeActor.GetProperty().SetLineWidth(2)
         self.planeActor.SetMapper(self.cutterMapper)
         self.planeActor.SetPosition(self.x,self.y,self.z)
