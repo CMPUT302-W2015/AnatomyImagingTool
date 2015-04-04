@@ -1,6 +1,7 @@
 import bluetooth
 import threading
 from PyQt4.QtCore import QThread
+import GlobalVariables
 
 """
 Note that each instantiation of this class creates a new thread. 
@@ -45,7 +46,8 @@ class BluetoothListener(QThread):
                 if len(data) == 0: 
                     #print("len0")
                     break
-                if data == "$": 
+                if data == "$":
+                    GlobalVariables.BTS.send("$") 
                     #print("term")
                     break
                 #instead of printing, this should call functions or change global variables

@@ -1,11 +1,20 @@
 import bluetooth
-import sys
+import platform
+import GlobalVariables
 
 class BluetoothSender():
-    
-    def __init__(self, addr):
+    def __init__(self):
+        uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"                
+        TV_ADDRESS = "00:1B:DC:0F:2A:E8"
+        TABLET_ADDRESS = "AC:22:0B:57:FE:70"
 
-        uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
+        if GlobalVariables.device == "TV":
+            addr = TABLET_ADDRESS
+            print("I'm a TV")  
+        else:
+            addr = TV_ADDRESS
+            print("I'm a tablet")
+        #search for server
 
         #search for server
         print("BTS:searching...")

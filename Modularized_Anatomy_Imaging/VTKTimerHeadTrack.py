@@ -76,6 +76,14 @@ class vtkTimerHeadTrack():
 
         dx, dy, dz = data['position']
         qx, qy, qz, qw = data['quaternion']  
+        
+        msg = str(dx) + "," + str(dy) + "," + str(dz) + "," + str(qx) + "," + str(qy) + "," + str(qz) + "," + str(qw) 
+        
+        """
+        send data to tablet
+        """
+        
+        GlobalVariables.BTS.send(msg) # @UndefinedVariable
          
         if str(userdata) == "tablet":
             sensorid = 1
