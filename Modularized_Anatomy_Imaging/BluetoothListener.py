@@ -44,11 +44,11 @@ class BluetoothListener(QThread):
             while True:
                 data = client_sock.recv(1024)
                 if len(data) == 0: 
-                    #print("len0")
                     break
-                if data == "$":
-                    GlobalVariables.BTS.send("$") 
-                    #print("term")
+                if data == "$close":
+                    GlobalVariables.BTS.send("$close_ack") 
+                    break
+                if data == "$close_ack":
                     break
                 #instead of printing, this should call functions or change global variables
                 print("%s" % data)

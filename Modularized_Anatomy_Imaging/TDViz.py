@@ -4,7 +4,7 @@ from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import vtk, dicom, numpy as np, glob, xml.etree.ElementTree as ET, os, datetime
 from PySide.QtGui import QGridLayout as pysideQGridLayout
 import GlobalVariables
-import CropControlItems, CommonControlItems, PositionControlItems, TransferFunctionControlItems, PlaneWidgetControlItems, PlayControlItems
+import CropControlItems, CommonControlItems, PositionControlItems, TransferFunctionControlItems, PlaneWidgetControlItems, PlayControlItems, TabletControlItems
 import SmoothingControlItems, LightingControlItems, ViewControlItems, LabelControlItems, VtkTimerCallBack, TransferFunctionEditor
 import OpacityEditor, GradientOpacityEditor, ColorEditor, PlaneGenerator
 import platform
@@ -41,7 +41,7 @@ class TDViz(QMainWindow):
         self.lightingControlItems = LightingControlItems.LightingControlItems()
         self.viewControlItems = ViewControlItems.ViewControlItems(self)
         self.labelControlItems = LabelControlItems.LabelControlItems()
-        
+        self.tabletControlItems = TabletControlItems.TabletControlItems(self)
         
         tabWidget = QTabWidget()
         tabWidget.addTab(self.commonControlItems, "General Controls")
@@ -54,6 +54,7 @@ class TDViz(QMainWindow):
         tabWidget.addTab(self.smoothingControlItems, "Smoothing")
         tabWidget.addTab(self.lightingControlItems, "Lighting")
         tabWidget.addTab(self.labelControlItems, "Labelling")
+        tabWidget.addTab(self.tabletControlItems, "Tablet Controls")
 
         
         buttonGroup = QGroupBox()
@@ -106,6 +107,10 @@ class TDViz(QMainWindow):
 
         self.button_savescreen.clicked.connect(self.saveScreen)
         self.combobox_loadsettings.activated.connect(self.loadSettings)
+        
+        self.button_bluetoothConnect.clicked.connect(self.bluetoothConnect)
+        self.button_tracking.clicked.connect(self.tracking)
+        self.button_rotateImage.clicked.connect(self.rotateImage)
         
             
         for scale in (self.scale_xmin, self.scale_xmax, self.scale_ymin, self.scale_ymax, self.scale_zmin, self.scale_zmax):
@@ -223,6 +228,7 @@ class TDVizCustom(TDViz):
         
         if device == "TV":
             self.initHeadTrackText()
+
         
         self._renWin.Render()  
         
@@ -250,6 +256,11 @@ class TDVizCustom(TDViz):
         self.stylustext.SetDisplayPosition(1600, 20)      
         self.stylustext.SetInput("0")
         self._ren.AddActor(self.stylustext)  
+        
+        self.bluetoothtext = vtk.vtkTextActor()        
+        self.bluetoothtext.SetDisplayPosition(20, 950)      
+        self.bluetoothtext.SetInput("Bluetooth Disconnected")
+        self._ren.AddActor(self.bluetoothtext)  
         
     def initTabletPlane(self):
         
@@ -1386,3 +1397,15 @@ class TDVizCustom(TDViz):
         if tfunc_files:
             self.transferFunctionControlItems.combobox_transfunction.addItems(tfunc_files)   
             self.transferFunctionControlItems.combobox_transfunction.setCurrentIndex(self.transferFunctionControlItems.combobox_transfunction.findText(fname+".vvt"))        
+    
+    def bluetoothConnect(self):
+        GlobalVariables.bluetoothConnect()
+        
+        self.bluetoothtext.SetInput("Bluetooth Connected")
+        self._ren.AddActor(self.bluetoothtext)
+
+    def tracking(self):
+        print("WEEEEE")
+    
+    def rotateImage(self):
+        print("YAHHOOOOOOO")

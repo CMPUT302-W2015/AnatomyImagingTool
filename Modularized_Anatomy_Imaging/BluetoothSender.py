@@ -40,7 +40,7 @@ class BluetoothSender():
             self.sock.send(msg)
             
     def disconnect(self):
-            self.sock.send("$")
+            self.sock.send("$close")
             self.sock.close()
             print("BTS:connection closed")
             
