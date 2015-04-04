@@ -53,7 +53,8 @@ class BluetoothListener(QThread):
                 #instead of printing, this should call functions or change global variables
                 print("%s" % data)
         except IOError:
-            pass
+            print("BTL: IOError")
+            
 
         client_sock.close()
         server_sock.close()

@@ -263,13 +263,17 @@ class TDVizCustom(TDViz):
         self._ren.AddActor(self.bluetoothtext)  
         
     def initTabletPlane(self):
-        
+        '''
         PlaneGenerator.init() # @UndefinedVariable 
         self.tabletPlane = PlaneGenerator.getPlane() # @UndefinedVariable
         self.tabletPlane.setPlaneInteractor(self._iren)       
         self.tabletPlane.setPlanePosition(GlobalVariables.imageXDist/2, GlobalVariables.imageYDist/2, GlobalVariables.imageZDist/2) # @UndefinedVariable
         self.planeActor = self.tabletPlane.getPlaneActor()
         self._renWin.Render() 
+        '''
+        PlaneGenerator.init() # @UndefinedVariable 
+        self.cubeActor = PlaneGenerator.getCubeActor() # @UndefinedVariable
+        self._ren.AddActor(self.cubeActor)
        
     def cameraAnyEvent(self,obj,evt):
         self.cameraText.SetInput("Orientation X = %5.0f\nOrientation Y = %5.0f\nOrientation Z = %5.0f" % (obj.GetOrientation()[0],obj.GetOrientation()[1],obj.GetOrientation()[2]))
@@ -324,8 +328,9 @@ class TDVizCustom(TDViz):
     """
     def closeEvent(self, event):
         if GlobalVariables.online == True and GlobalVariables.BTL.isFinished() == False:
-            GlobalVariables.BTS.disconnect() # @UndefinedVariable
+            GlobalVariables.BTS.disconnect1() # @UndefinedVariable
             GlobalVariables.BTL.wait() # @UndefinedVariable
+            GlobalVariables.BTS.disconnect2() 
         print("Main Thread Closed")
         event.accept() 
             
@@ -754,7 +759,7 @@ class TDVizCustom(TDViz):
         self.distanceWidget.GetDistanceRepresentation().SetPoint2WorldPosition(np.array([0,0,-200])) 
                       
         if device == "TV":
-            headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.planeActor, self.volume, self)
+            headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, self)
             headtrack.renderer = self._ren
             self._iren.AddObserver('TimerEvent', headtrack.execute)
             self._iren.CreateRepeatingTimer(20)  
@@ -1399,8 +1404,8 @@ class TDVizCustom(TDViz):
             self.transferFunctionControlItems.combobox_transfunction.setCurrentIndex(self.transferFunctionControlItems.combobox_transfunction.findText(fname+".vvt"))        
     
     def bluetoothConnect(self):
-        GlobalVariables.bluetoothConnect()
-        
+        GlobalVariables.BTS.connect()
+        GlobalVariables.BTL.start()
         self.bluetoothtext.SetInput("Bluetooth Connected")
         self._ren.AddActor(self.bluetoothtext)
 
@@ -1408,4 +1413,18 @@ class TDVizCustom(TDViz):
         print("WEEEEE")
     
     def rotateImage(self):
-        print("YAHHOOOOOOO")
+        while True:
+            camPos = GlobalVariables.camMat
+            print(camPos)
+        
+        """
+
+        self._ren.GetActiveCamera().SetAzimuth(-1.0*self.scale_roll.value())
+        self._ren.GetActiveCamera().SetElevation(-1.0*self.scale_roll.value())
+        self._ren.GetActiveCamera().SetRoll(-1.0*self.scale_roll.value())
+        self._renWin.Render()
+        """
+        
+        
+        
+        

@@ -10,7 +10,6 @@ Created on Mar 10, 2015
 
 @author: Bradley
 '''
-
 class vtkTimerHeadTrack():
     tracker=vrpn.receiver.Tracker("Tracker0@localhost")
     tablet=vrpn.receiver.Tracker("Tablet@localhost:3883")
@@ -82,7 +81,7 @@ class vtkTimerHeadTrack():
         """
         send data to tablet
         """
-        
+        print(msg)
         GlobalVariables.BTS.send(msg) # @UndefinedVariable
          
         if str(userdata) == "tablet":
@@ -152,8 +151,8 @@ class vtkTimerHeadTrack():
             transform.PostMultiply()
             transform.Concatenate(self.rmatrix4x4)    
             
-            self.lineactor.SetUserTransform(transform)
-            self.lineactor.Modified()            
+            self.actor.SetUserTransform(transform)
+            self.actor.Modified()            
             
             
             transformCam = vtk.vtkTransform()            

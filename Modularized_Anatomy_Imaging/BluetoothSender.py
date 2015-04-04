@@ -26,22 +26,26 @@ class BluetoothSender():
 
         #setup parameter for outgoing connection
         first_match = service_matches[0]
-        port = first_match["port"] 
-        name = first_match["name"]
-        host = first_match["host"]
+        self.port = first_match["port"] 
+        self.name = first_match["name"]
+        self.host = first_match["host"]
         #print("BTS:connecting to \"%s\" on %s..." %(name, host))
 
         #connect to server
         self.sock=bluetooth.BluetoothSocket( bluetooth.RFCOMM )
-        self.sock.connect((host, port))
-        print("BTS:connected to \"%s\" on %s" %(name, host))
+        
+    def connect(self):
+        self.sock.connect((self.host, self.port))
+        print("BTS:connected to \"%s\" on %s" %(self.name, self.host))
         
     def send(self, msg):
             self.sock.send(msg)
             
-    def disconnect(self):
+    def disconnect1(self):
             self.sock.send("$close")
+            
+    def disconnect2(self):
             self.sock.close()
             print("BTS:connection closed")
-            
+                    
             
