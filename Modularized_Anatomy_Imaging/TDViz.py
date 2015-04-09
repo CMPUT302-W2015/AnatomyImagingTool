@@ -1404,8 +1404,11 @@ class TDVizCustom(TDViz):
             self.transferFunctionControlItems.combobox_transfunction.setCurrentIndex(self.transferFunctionControlItems.combobox_transfunction.findText(fname+".vvt"))        
     
     def bluetoothConnect(self):
-        GlobalVariables.BTS.connect()
+        print("connecting")
         GlobalVariables.BTL.start()
+        print("connecting2")
+        GlobalVariables.BTS.connect()
+        
         self.bluetoothtext.SetInput("Bluetooth Connected")
         self._ren.AddActor(self.bluetoothtext)
 

@@ -13,9 +13,7 @@ Created on Mar 10, 2015
 def main():
 
     GlobalVariables.init()
-   
-   
-   
+     
     app = QApplication([])
 
     File = QFile("darkorange.stylesheet")
@@ -38,7 +36,6 @@ def main():
     cam.SetScreenBottomLeft(-262.5,148.5-148.5*2.0*yscreenf,-410)
     cam.SetScreenBottomRight(262.5,148.5-148.5*2.0*yscreenf,-410)
     cam.SetScreenTopRight(262.5,148.5,-410) 
-
 
     sys.exit(app.exec_())   
         

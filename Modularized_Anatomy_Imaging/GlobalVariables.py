@@ -32,10 +32,8 @@ def init():
     
     
     device = Architecture.get()
-    online = True #this is used by the handler for the close button also
-
+    online = False #this is used by the handler for the close button also
     BTL = BluetoothListener.BluetoothListener()
-    #BTL.start()
     BTS = BluetoothSender.BluetoothSender()
     
     isprojector = False
@@ -56,15 +54,15 @@ def init():
     #BTS = BluetoothSender.BluetoothSender()
     
     
-def bluetoothConnect():
-    import BluetoothSender
-    import BluetoothListener
-
-    online = True #this is used by the handler for the close button also
-    if online == True:
-        BTL = BluetoothListener.BluetoothListener()
-        BTL.start()
-        BTS = BluetoothSender.BluetoothSender()
+# def bluetoothConnect():
+#     import BluetoothSender
+#     import BluetoothListener
+# 
+#     online = True #this is used by the handler for the close button also
+#     if online == True:
+#         BTL = BluetoothListener.BluetoothListener()
+#         BTL.start()
+#         BTS = BluetoothSender.BluetoothSender()
 
         
     
