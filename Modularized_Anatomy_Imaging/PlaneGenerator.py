@@ -14,15 +14,32 @@ class PlaneGenerator(object):
     def __init__(self):
             
         
-        self.plane = vtk.vtkPlane()
+        cropPlane = vtk.vtkPlane()
+        #cropPlaneTransform = vtk.vtkTransform()
+        #cropPlaneTransform.Translate(0, 0, 0)
         #self.plane.SetOrigin(0,0,0)
         #self.plane.SetNormal(0,0,0)
         #self.plane.UpdatePlacement() 
         
+        cropPlaneMapper = vtk.vtkPolyDataMapper()
+        #cropPlaneMapper.SetInputConnection(cropPlane.GetOutputPort())
+                
+        cropPlaneTransformFilter = vtk.vtkTransformPolyDataFilter()
+        #cropPlaneTransformFilter.SetInputConnection(cropPlane.GetOutputPort())
+        #cubeTransformFilter.SetTransform(cubeTransform)
+        
+        appendFilter = vtk.vtkAppendPolyData()
+        #appendFilter.AddInputConnection(line.GetOutputPort())
+        #appendFilter.AddInputConnection(cropPlaneTransformFilter.GetOutputPort())
         
         self.x = GlobalVariables.imageXDist/2.0 # @UndefinedVariable
         self.y = GlobalVariables.imageYDist/2.0 # @UndefinedVariable
         self.z = GlobalVariables.imageZDist/2.0 # @UndefinedVariable
+        
+        self.cropPlaneActor = vtk.vtkActor()
+        self.cropPlaneActor.SetMapper(cropPlaneMapper)
+        self.cropPlaneActor.GetProperty().SetColor(0.2, 0.6, 0.8)
+        self.cropPlaneActor.SetPosition(self.x,self.y,self.z)#(self.sampleSpacing[0]/2,self.sampleSpacing[1]/2,self.sampleSpacing[2]/2)#(-30, -30, -150) #(70,90,50)
         
         self.planeWidget = vtk.vtkImplicitPlaneWidget()
         #self.planeWidget.SetPlaceFactor(1.1)
@@ -38,7 +55,7 @@ class PlaneGenerator(object):
         
         #create cutter
         self.cutter=vtk.vtkCutter()
-        self.cutter.SetCutFunction(self.planeWidget.GetPlane(self.plane))
+        self.cutter.SetCutFunction(self.planeWidget.GetPlane(cropPlane))
         #cutter.SetInputConnection(cube.GetOutputPort())
         self.cutter.Update()
         self.cutterMapper=vtk.vtkPolyDataMapper()
@@ -88,7 +105,7 @@ class PlaneGenerator(object):
 
     def getPlane(self):
         return self.planeWidget
-        #return self.cubeActor
+        #return self.cropPlaneActor
     
     def setPlanePosition(self,x,y,z):
         self.planeWidget.PlaceWidget(-2*x,x*4,-2*y,y*4,-2*z,z*4) # @UndefinedVariable
@@ -98,7 +115,7 @@ class PlaneGenerator(object):
         self.planeWidget.On()
         
     def getPlaneActor(self):
-        return self.planeActor
+        return self.cropPlaneActor
         
         
 def init():
@@ -107,7 +124,6 @@ def init():
     
 def getPlane():
     return planeGenerator
-    #return planeGenerator.getCubeActor()
 
-def setPlanePosition(self,x,y,z):
-        planeGenerator.setPosition(x,y,z)
+def setcropPlaneActorPosition(self,x,y,z):
+        planeGenerator.cropPlaneActor.setPosition(x,y,z)
