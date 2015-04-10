@@ -185,14 +185,24 @@ class TDVizCustom(TDViz):
         self.volume = vtk.vtkVolume()
         self.volumeProperty = vtk.vtkVolumeProperty()        
         
-        self._renWin.AddRenderer(self._ren)
         
-        self._iren = self._renWin.GetInteractor()  
+        ""
+
+
+        ""
+        
+        self._renWin.AddRenderer(self._ren)
+        self._iren = self._renWin.GetInteractor()
+  
         self._iren.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
         self.removeAllMouseEvents(self._iren)
         
         self.sopuid = []
         self.reader = []
+        
+        ""
+        
+        ""
         
         self.initAxes()  
         self.initBoxWidget()
@@ -588,6 +598,41 @@ class TDVizCustom(TDViz):
             self.reader.SetDataExtent(0, self.dim[0] - 1, 0, self.dim[1] - 1, 0, self.dim[2] - 1)
             self.reader.SetWholeExtent(0, self.dim[0] - 1, 0, self.dim[1] - 1, 0, self.dim[2] - 1)
             self.reader.SetDataSpacing(self.spacing[0], self.spacing[1], self.spacing[2]) 
+            ""
+            if GlobalVariables.device == "tablet":
+                self._iren = vtk.vtkRenderWindowInteractor()
+                style = vtk.vtkInteractorStyleImage()
+                style.SetInteractionModeToImage3D()
+                self._iren.SetInteractorStyle(style)
+                self._renWin.SetInteractor(self._iren)
+                
+            
+                im = vtk.vtkImageResliceMapper()
+                    
+                im.SetInputConnection(self.reader.GetOutputPort())
+                im.SliceFacesCameraOn()
+                im.SliceAtFocalPointOn()
+                im.BorderOff()
+    
+                ia = vtk.vtkImageSlice()
+                #ia.SetPosition(-2,-1,0) #ResetCamera and ResetCameraClippingRange do this better
+                #ia.SetScale(0.2,0.2,0.2)
+                ia.SetMapper(im)
+                
+                self._ren.AddViewProp(ia)
+                self._ren.SetBackground(0.1,0.2,0.4)
+                #self._renWin.SetSize(300,300)
+                
+                # render the image
+                self._renWin.Render()
+                cam1 = self._ren.GetActiveCamera()
+                cam1.ParallelProjectionOn()
+                self._ren.ResetCamera()
+                self._ren.ResetCameraClippingRange()
+                self._renWin.Render()
+                
+                self._iren.Start()
+            ""
             
             # ------
             
@@ -638,6 +683,8 @@ class TDVizCustom(TDViz):
             
             self.cb.renderer = self._ren
     
+    
+        
     def loadDir(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly | QFileDialog.DontUseNativeDialog
         self.dirname = str(QFileDialog.getExistingDirectory(self,"Select DICOM Directory", GlobalVariables.initddir, options)) # @UndefinedVariable
