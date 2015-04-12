@@ -599,7 +599,7 @@ class TDVizCustom(TDViz):
             self.reader.SetWholeExtent(0, self.dim[0] - 1, 0, self.dim[1] - 1, 0, self.dim[2] - 1)
             self.reader.SetDataSpacing(self.spacing[0], self.spacing[1], self.spacing[2]) 
             ""
-            if GlobalVariables.device == "TV" :
+            if GlobalVariables.device == "tablet":
                 self._iren = vtk.vtkRenderWindowInteractor()
                 style = vtk.vtkInteractorStyleImage()
                 style.SetInteractionModeToImage3D()
@@ -611,15 +611,12 @@ class TDVizCustom(TDViz):
                     
                 im.SetInputConnection(self.reader.GetOutputPort())
                 im.SliceFacesCameraOn()
-                im.SetSlicePlane
-                
+                im.SliceAtFocalPointOn()
                 im.BorderOff()
     
                 ia = vtk.vtkImageSlice()
-                ia.SetPosition(-80,-10,0) #ResetCamera and ResetCameraClippingRange do this better
+                #ia.SetPosition(-2,-1,0) #ResetCamera and ResetCameraClippingRange do this better
                 #ia.SetScale(0.2,0.2,0.2)
-                
-                
                 ia.SetMapper(im)
                 
                 self._ren.AddViewProp(ia)
@@ -630,11 +627,8 @@ class TDVizCustom(TDViz):
                 self._renWin.Render()
                 cam1 = self._ren.GetActiveCamera()
                 cam1.ParallelProjectionOn()
-                #ia.SetPosition(10,10,10)
                 self._ren.ResetCamera()
                 self._ren.ResetCameraClippingRange()
-                self.updateText(str(ia.GetPosition()) + " // " + str(cam1.GetPosition()))
-                
                 self._renWin.Render()
                 
                 self._iren.Start()
@@ -1464,10 +1458,6 @@ class TDVizCustom(TDViz):
         
         self.bluetoothtext.SetInput("Bluetooth Connected")
         self._ren.AddActor(self.bluetoothtext)
-    
-    def updateText(self, text):
-        self.bluetoothtext.SetInput(text)
-    
 
     def tracking(self):
         print("WEEEEE")
