@@ -598,90 +598,89 @@ class TDVizCustom(TDViz):
             self.reader.SetDataExtent(0, self.dim[0] - 1, 0, self.dim[1] - 1, 0, self.dim[2] - 1)
             self.reader.SetWholeExtent(0, self.dim[0] - 1, 0, self.dim[1] - 1, 0, self.dim[2] - 1)
             self.reader.SetDataSpacing(self.spacing[0], self.spacing[1], self.spacing[2]) 
-            ""
-            if GlobalVariables.device == "tablet":
-                self._iren = vtk.vtkRenderWindowInteractor()
+            
+            if GlobalVariables.device == "TV":
                 style = vtk.vtkInteractorStyleImage()
                 style.SetInteractionModeToImage3D()
                 self._iren.SetInteractorStyle(style)
-                self._renWin.SetInteractor(self._iren)
+
                 
-            
-                im = vtk.vtkImageResliceMapper()
-                    
+                im = vtk.vtkImageResliceMapper() 
                 im.SetInputConnection(self.reader.GetOutputPort())
                 im.SliceFacesCameraOn()
                 im.SliceAtFocalPointOn()
                 im.BorderOff()
     
                 ia = vtk.vtkImageSlice()
-                #ia.SetPosition(-2,-1,0) #ResetCamera and ResetCameraClippingRange do this better
-                #ia.SetScale(0.2,0.2,0.2)
                 ia.SetMapper(im)
                 
                 self._ren.AddViewProp(ia)
                 self._ren.SetBackground(0.1,0.2,0.4)
-                #self._renWin.SetSize(300,300)
                 
-                # render the image
-                self._renWin.Render()
-                cam1 = self._ren.GetActiveCamera()
-                cam1.ParallelProjectionOn()
+                self.cam.ParallelProjectionOn()
                 self._ren.ResetCamera()
                 self._ren.ResetCameraClippingRange()
-                self._renWin.Render()
+                #self._renWin.Render()
                 
-                self._iren.Start()
-            ""
+                self.initTabletPlane()  
+                headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, im, self)
+                headtrack.renderer = self._ren
+                self._iren.AddObserver('TimerEvent', headtrack.execute)
+                self._iren.CreateRepeatingTimer(20)
+                
+            
+            
+            else:
             
             # ------
             
-            #Store the length of each of the image axes
-            GlobalVariables.imageXDist = (float(self.dim[0])*self.spacing[0])
-            GlobalVariables.imageYDist = (float(self.dim[1])*self.spacing[1])
-            GlobalVariables.imageZDist = (float(self.dim[2])*self.spacing[2])
-            
-            print ("x: " + str(self.dim[0]))
-            print ("y: " + str(self.dim[1]))
-            print ("z: " + str(self.dim[2]))
-            '''
-            print ("xmax: " + str(self.scale_xmax.value()))
-            print ("ymax: " + str(self.scale_ymax.value()))
-            print ("zmax: " + str(self.scale_zmax.value()))
-            '''
-            print ("Spacing[0]: " + str(self.spacing[0]))
-            print ("Spacing[1]: " + str(self.spacing[1]))
-            print ("Spacing[2]: " + str(self.spacing[2]))
-            
-            # ------
-            
-            self.volumeMapper = vtk.vtkOpenGLVolumeTextureMapper3D()
-            self.volumeMapper.SetPreferredMethodToNVidia()
-            self.volumeMapper.SetSampleDistance(0.5)
-            
-            self.volume.SetMapper(self.volumeMapper)  
-            
-            self.imageGaussianSmooth.SetInputConnection(self.reader.GetOutputPort()) 
-            self.imageGaussianSmooth.Update()
-                    
-            self.volumeMapper.SetInputConnection(self.imageGaussianSmooth.GetOutputPort())
-    
-            self.loadData()
-            
-            self._ren.AutomaticLightCreationOff()
-            
-            self.isplay = False
-            self.isrotate = False
-            
-            self.slider_imageNumber.setEnabled(True)
-            self.button_iterate.setEnabled(True)             
-             
-            self.slider_imageNumber.setMaximum(self.volT.shape[3]-1)
-            self.slider_imageNumber.setValue(0)
-            self.slider_imageNumber_valuechanged()
-            self.cb = VtkTimerCallBack.vtkTimerCallBack(self.volT.shape[3], self.isplay, self.isrotate, self.slider_imageNumber)
-            
-            self.cb.renderer = self._ren
+                #Store the length of each of the image axes
+                GlobalVariables.imageXDist = (float(self.dim[0])*self.spacing[0])
+                GlobalVariables.imageYDist = (float(self.dim[1])*self.spacing[1])
+                GlobalVariables.imageZDist = (float(self.dim[2])*self.spacing[2])
+                
+                """
+                print ("x: " + str(self.dim[0]))
+                print ("y: " + str(self.dim[1]))
+                print ("z: " + str(self.dim[2]))
+                
+                print ("xmax: " + str(self.scale_xmax.value()))
+                print ("ymax: " + str(self.scale_ymax.value()))
+                print ("zmax: " + str(self.scale_zmax.value()))
+                
+                print ("Spacing[0]: " + str(self.spacing[0]))
+                print ("Spacing[1]: " + str(self.spacing[1]))
+                print ("Spacing[2]: " + str(self.spacing[2]))
+                """
+                # ------
+                
+                self.volumeMapper = vtk.vtkOpenGLVolumeTextureMapper3D()
+                self.volumeMapper.SetPreferredMethodToNVidia()
+                self.volumeMapper.SetSampleDistance(0.5)
+                
+                self.volume.SetMapper(self.volumeMapper)  
+                
+                self.imageGaussianSmooth.SetInputConnection(self.reader.GetOutputPort()) 
+                self.imageGaussianSmooth.Update()
+                        
+                self.volumeMapper.SetInputConnection(self.imageGaussianSmooth.GetOutputPort())
+        
+                self.loadData()
+                
+                self._ren.AutomaticLightCreationOff()
+                
+                self.isplay = False
+                self.isrotate = False
+                
+                self.slider_imageNumber.setEnabled(True)
+                self.button_iterate.setEnabled(True)             
+                 
+                self.slider_imageNumber.setMaximum(self.volT.shape[3]-1)
+                self.slider_imageNumber.setValue(0)
+                self.slider_imageNumber_valuechanged()
+                self.cb = VtkTimerCallBack.vtkTimerCallBack(self.volT.shape[3], self.isplay, self.isrotate, self.slider_imageNumber)
+                
+                self.cb.renderer = self._ren
     
     
         
@@ -805,11 +804,11 @@ class TDVizCustom(TDViz):
         self.distanceWidget.GetDistanceRepresentation().SetPoint1WorldPosition(np.array([0,0,-100]))
         self.distanceWidget.GetDistanceRepresentation().SetPoint2WorldPosition(np.array([0,0,-200])) 
                       
-        if device == "TV":
-            headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, self)
-            headtrack.renderer = self._ren
-            self._iren.AddObserver('TimerEvent', headtrack.execute)
-            self._iren.CreateRepeatingTimer(20)  
+        
+        headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, self)
+        headtrack.renderer = self._ren
+        self._iren.AddObserver('TimerEvent', headtrack.execute)
+        self._iren.CreateRepeatingTimer(20)  
                  
         
         self._renWin.Render()  

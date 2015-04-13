@@ -15,7 +15,8 @@ class vtkTimerHeadTrack():
     tablet=vrpn.receiver.Tracker("Tablet@localhost:3883")
     
     
-    def __init__(self, cam, text, text2, actor, volume, master):
+    def __init__(self, cam, text, text2, actor, volume, im, master):
+        print("HeadTrack init")
         self.text = text
         self.text2 = text2
         self.tracker.register_change_handler("tracker", self.callback, "position")
@@ -23,6 +24,8 @@ class vtkTimerHeadTrack():
         
         self.actor = actor
         self.cam = cam
+        self.im = im
+        self.im.SliceAtFocalPointOn()
         self.master = master
         self.rmatrix = np.zeros((4,4))
         self.rmatrix4x4 = vtk.vtkMatrix4x4()        
@@ -39,6 +42,7 @@ class vtkTimerHeadTrack():
         
         
     def execute(self, obj, event):
+        print("HeadTrack execute")
         iren = obj
         self.tablet.mainloop()
         self.tracker.mainloop()           
@@ -70,19 +74,23 @@ class vtkTimerHeadTrack():
     
     def callback(self, userdata, data):
         
-        print str(userdata)
-        print str(data)
+        #print str(userdata)
+        #print str(data)
 
         dx, dy, dz = data['position']
         qx, qy, qz, qw = data['quaternion']  
+        
+        self.cam.SetPosition(200*dx+73.9,200*dy+85.0,200*dz+598.3)
+        self.im.SliceAtFocalPointOn()
         
         msg = str(dx) + "," + str(dy) + "," + str(dz) + "," + str(qx) + "," + str(qy) + "," + str(qz) + "," + str(qw) 
         
         """
         send data to tablet
         """
-        print(msg)
-        GlobalVariables.BTS.send(msg) # @UndefinedVariable
+        #print(msg)
+        if GlobalVariables.online == True:
+            GlobalVariables.BTS.send(msg) # @UndefinedVariable
          
         if str(userdata) == "tablet":
             sensorid = 1
@@ -110,10 +118,13 @@ class vtkTimerHeadTrack():
         print ("dz: " + str(dz*1000))
         '''
         #self.rmatrix = GlobalVariables.camMat4x4.dot(self.rmatrix) # @UndefinedVariable
-        
+        camx = str(math.floor(self.cam.GetPosition()[0]*10))
+        camy = str(math.floor(self.cam.GetPosition()[1]*10))
+        camz = str(math.floor(self.cam.GetPosition()[2]*10))
+        self.text.SetInput("x=" + camx + " y=" + camy + " z=" + camz)
         if sensorid == 0:
-            self.text.SetInput("pos = (%-#6.3g, %-#6.3g, %-#6.3g)\n quaternion = (%-#6.3g, %-#6.3g, %-#6.3g, %-#6.3g)" % (dx, dy, dz, qw, qx, qy, qz))
-    
+            #self.text.SetInput("pos = (%-#6.3g, %-#6.3g, %-#6.3g)\n quaternion = (%-#6.3g, %-#6.3g, %-#6.3g, %-#6.3g)" % (dx, dy, dz, qw, qx, qy, qz))
+            
             if not math.isnan(dx) and not math.isnan(qx):
                 self.cam.SetEyeTransformMatrix(self.rmatrix.reshape(16,1))
                 
@@ -158,6 +169,8 @@ class vtkTimerHeadTrack():
             transformCam = vtk.vtkTransform()            
             transformCam.Concatenate(self.rmatrix4x4)    
 
+            #self.cam.SetUserTransform(transformCam)
+            #self.cam.Modified()
             '''
             if self.button0state:
                                
