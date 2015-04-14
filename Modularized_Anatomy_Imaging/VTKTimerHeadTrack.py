@@ -76,11 +76,25 @@ class vtkTimerHeadTrack():
         
         #print str(userdata)
         #print str(data)
-
+        oldCamPos = self.cam.GetPosition()
+        oldCamFoc = self.cam.GetFocalPoint()
+        
         dx, dy, dz = data['position']
         qx, qy, qz, qw = data['quaternion']  
         
-        self.cam.SetPosition(200*dx+73.9,200*dy+85.0,200*dz+598.3)
+        self.cam.SetPosition(200*dx+73.9,200*dy-50.0,200*dz+598.3)
+        #self.im.SliceAtFocalPointOn()
+        
+        newCamPos = self.cam.GetPosition()
+        xDiff = newCamPos[0] - oldCamPos[0]
+        yDiff = newCamPos[1] - oldCamPos[1]
+        zDiff = newCamPos[2] - oldCamPos[2]
+        
+        oldFocX = self.cam.GetFocalPoint()[0]
+        oldFocY = self.cam.GetFocalPoint()[1]
+        oldFocZ = self.cam.GetFocalPoint()[2]
+        
+        self.cam.SetFocalPoint(oldFocX - xDiff, oldFocY - yDiff, oldFocZ - zDiff)
         self.im.SliceAtFocalPointOn()
         
         msg = str(dx) + "," + str(dy) + "," + str(dz) + "," + str(qx) + "," + str(qy) + "," + str(qz) + "," + str(qw) 

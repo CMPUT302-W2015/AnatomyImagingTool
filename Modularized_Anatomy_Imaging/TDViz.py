@@ -605,7 +605,10 @@ class TDVizCustom(TDViz):
                 self._iren.SetInteractorStyle(style)
 
                 
-                im = vtk.vtkImageResliceMapper() 
+                
+                #color = imagemaptocolor
+                
+                im = vtk.vtkImageSliceMapper() 
                 im.SetInputConnection(self.reader.GetOutputPort())
                 im.SliceFacesCameraOn()
                 im.SliceAtFocalPointOn()
@@ -615,7 +618,7 @@ class TDVizCustom(TDViz):
                 ia.SetMapper(im)
                 
                 self._ren.AddViewProp(ia)
-                self._ren.SetBackground(0.1,0.2,0.4)
+                self._ren.SetBackground(0,0,0)
                 
                 self.cam.ParallelProjectionOn()
                 self._ren.ResetCamera()
