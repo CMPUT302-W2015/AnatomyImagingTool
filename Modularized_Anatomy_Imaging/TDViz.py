@@ -609,28 +609,32 @@ class TDVizCustom(TDViz):
                 
                 #color = imagemaptocolor
                 
-                im = vtk.vtkImageSliceMapper() 
-                im.SetInputConnection(self.reader.GetOutputPort())
-                im.SliceFacesCameraOn()
-                im.SliceAtFocalPointOn()
-                im.BorderOff()
+                self.im = vtk.vtkImageSliceMapper() 
+                self.im.SetInputConnection(self.reader.GetOutputPort())
+                self.im.SliceFacesCameraOn()
+                self.im.SliceAtFocalPointOn()
+                self.im.BorderOff()
     
                 ia = vtk.vtkImageSlice()
-                ia.SetMapper(im)
+                
+                ia.SetMapper(self.im)
                 
                 self._ren.AddViewProp(ia)
                 self._ren.SetBackground(0,0,0)
                 
                 self.cam.ParallelProjectionOn()
+                
+                #size = self._ren.Get
                 self._ren.ResetCamera()
                 self._ren.ResetCameraClippingRange()
+                self.cam.Zoom(2.5)
                 #self._renWin.Render()
                 
-                self.initTabletPlane()  
-                headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, im, self)
-                headtrack.renderer = self._ren
-                self._iren.AddObserver('TimerEvent', headtrack.execute)
-                self._iren.CreateRepeatingTimer(20)
+                #self.initTabletPlane()  
+#                 headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, im, self)
+#                 headtrack.renderer = self._ren
+#                 self._iren.AddObserver('TimerEvent', headtrack.execute)
+#                 self._iren.CreateRepeatingTimer(20)
                 
             
             
@@ -1467,8 +1471,38 @@ class TDVizCustom(TDViz):
         #self.bluetoothtext.SetInput("Bluetooth Connected")
         #self._ren.AddActor(self.bluetoothtext)
         
+        
     def bluetoothCallback(self, data):
-        print("main thread:" + data)
+        print("Data Received")
+        dataList = data.split(',')
+        dx = float(dataList[0])
+        dy = float(dataList[1])
+        dz = float(dataList[2])
+        
+        oldCamPos = self.cam.GetPosition()
+        oldCamFoc = self.cam.GetFocalPoint()
+        
+        oldFocX = self.cam.GetFocalPoint()[0]
+        oldFocY = self.cam.GetFocalPoint()[1]
+        oldFocZ = self.cam.GetFocalPoint()[2]
+        
+        #self.cam.SetPosition(200*dx+73.9,200*dy-50.0,200*dz+598.3)
+        self.cam.SetPosition(oldCamPos[0],oldCamPos[1],200*dz+598.3)
+        firstCall = True
+        if firstCall == True:
+            self.im.SliceAtFocalPointOn()
+            firstCall = False
+        
+        newCamPos = self.cam.GetPosition()
+        xDiff = newCamPos[0] - oldCamPos[0]
+        yDiff = newCamPos[1] - oldCamPos[1]
+        zDiff = newCamPos[2] - oldCamPos[2]
+        
+        self.cam.SetFocalPoint(oldFocX, oldFocY, oldFocZ + zDiff)
+        #self.cam.SetFocalPoint(oldFocX - xDiff, oldFocY - yDiff, oldFocZ + zDiff)
+        self.im.SliceAtFocalPointOn()
+        
+        self._renWin.Render()
 
     def trackingOn(self):
         GlobalVariables.bluetoothPauseFlag = False
