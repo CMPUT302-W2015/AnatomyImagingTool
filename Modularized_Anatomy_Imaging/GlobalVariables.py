@@ -15,7 +15,7 @@ def init():
     global BTL
     global BTS
     global online
-    
+    global bluetoothPauseFlag
 
     global isprojector
     global initfdir 
@@ -35,6 +35,7 @@ def init():
     online = False #this is used by the handler for the close button also
     BTL = BluetoothListener.BluetoothListener()
     BTS = BluetoothSender.BluetoothSender()
+    bluetoothPauseFlag = False
     
     isprojector = False
     initfdir = ''

@@ -1461,8 +1461,11 @@ class TDVizCustom(TDViz):
         self.bluetoothtext.SetInput("Bluetooth Connected")
         self._ren.AddActor(self.bluetoothtext)
 
-    def tracking(self):
-        print("WEEEEE")
+    def trackingON(self):
+        GlobalVariables.bluetoothPauseFlag = True
+        
+    def trackingOff(self):
+        GlobalVariables.bluetoothPauseFlag = False
     
     def rotateImage(self):
         while True:

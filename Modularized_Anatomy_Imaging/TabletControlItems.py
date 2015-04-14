@@ -11,19 +11,19 @@ class TabletControlItems(QWidget):
         self.master = master
         super(TabletControlItems, self).__init__()
         
-        nbuttons = 3
+        nbuttons = 4
         
-        master.button_bluetoothConnect, master.button_tracking, master.button_rotateImage = [QPushButton() for i in range(nbuttons)]                    
-        buttontext = ["Connect Bluetooth", "Tracking On/Off",  "Rotate/Stop"]
+        master.button_bluetoothConnect, master.button_trackingOn, master.button_trackingOff, master.button_rotateImage = [QPushButton() for i in range(nbuttons)]                    
+        buttontext = ["Connect Bluetooth", "Tracking On",  "Tracking Off", "Rotate/Stop",]
         
         master.button_cameratext.setCheckable(True)
         
         layout = QHBoxLayout() 
         layout.setSpacing(0)
-        for index, button in enumerate((master.button_bluetoothConnect, master.button_tracking,  master.button_rotateImage )):
+        for index, button in enumerate((master.button_bluetoothConnect, master.button_trackingOn, master.button_trackingOff,  master.button_rotateImage )):
             button.setText(buttontext[index])
             
-        for comp in ((master.button_bluetoothConnect, master.button_tracking, master.button_rotateImage )):
+        for comp in ((master.button_bluetoothConnect, master.button_trackingOn, master.button_trackingOff, master.button_rotateImage )):
             layout.addWidget(comp)
             
         self.setLayout(layout)
