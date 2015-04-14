@@ -15,7 +15,7 @@ class vtkTimerHeadTrack():
     tablet=vrpn.receiver.Tracker("Tablet@localhost:3883")
     
     
-    def __init__(self, cam, text, text2, actor, volume, im, master):
+    def __init__(self, cam, text, text2, actor, volume, master):
         print("HeadTrack init")
         self.text = text
         self.text2 = text2
@@ -24,8 +24,8 @@ class vtkTimerHeadTrack():
         
         self.actor = actor
         self.cam = cam
-        self.im = im
-        self.im.SliceAtFocalPointOn()
+        #self.im = im
+        #self.im.SliceAtFocalPointOn()
         self.master = master
         self.rmatrix = np.zeros((4,4))
         self.rmatrix4x4 = vtk.vtkMatrix4x4()        
@@ -83,7 +83,7 @@ class vtkTimerHeadTrack():
         qx, qy, qz, qw = data['quaternion']  
         
         if not GlobalVariables.bluetoothPauseFlag: # @UndefinedVariable
-            self.cam.SetPosition(200*dx+73.9,200*dy-50.0,200*dz+598.3)
+            #self.cam.SetPosition(200*dx+73.9,200*dy-50.0,200*dz+598.3)
             #self.im.SliceAtFocalPointOn()
             
             newCamPos = self.cam.GetPosition()
@@ -95,8 +95,8 @@ class vtkTimerHeadTrack():
             oldFocY = self.cam.GetFocalPoint()[1]
             oldFocZ = self.cam.GetFocalPoint()[2]
             
-            self.cam.SetFocalPoint(oldFocX - xDiff, oldFocY - yDiff, oldFocZ - zDiff)
-            self.im.SliceAtFocalPointOn()
+            #self.cam.SetFocalPoint(oldFocX - xDiff, oldFocY - yDiff, oldFocZ - zDiff)
+            #self.im.SliceAtFocalPointOn()
             
             msg = str(dx) + "," + str(dy) + "," + str(dz) + "," + str(qx) + "," + str(qy) + "," + str(qz) + "," + str(qw) 
         

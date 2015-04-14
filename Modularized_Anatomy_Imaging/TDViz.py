@@ -1,5 +1,5 @@
 from PyQt4.QtGui import QMainWindow, QFrame, QGridLayout, QLabel, QTabWidget, QPushButton, QFileDialog, QComboBox, QGroupBox
-from PyQt4.QtCore import Qt
+from PyQt4.QtCore import Qt, SIGNAL
 from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import vtk, dicom, numpy as np, glob, xml.etree.ElementTree as ET, os, datetime
 from PySide.QtGui import QGridLayout as pysideQGridLayout
@@ -600,7 +600,7 @@ class TDVizCustom(TDViz):
             self.reader.SetWholeExtent(0, self.dim[0] - 1, 0, self.dim[1] - 1, 0, self.dim[2] - 1)
             self.reader.SetDataSpacing(self.spacing[0], self.spacing[1], self.spacing[2]) 
             
-            if GlobalVariables.device == "TV":
+            if GlobalVariables.device == "tablet":
                 style = vtk.vtkInteractorStyleImage()
                 style.SetInteractionModeToImage3D()
                 self._iren.SetInteractorStyle(style)
@@ -637,7 +637,11 @@ class TDVizCustom(TDViz):
             else:
             
             # ------
-            
+                self.initTabletPlane()  
+                headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, self)
+                headtrack.renderer = self._ren
+                self._iren.AddObserver('TimerEvent', headtrack.execute)
+                self._iren.CreateRepeatingTimer(20)
                 #Store the length of each of the image axes
                 GlobalVariables.imageXDist = (float(self.dim[0])*self.spacing[0])
                 GlobalVariables.imageYDist = (float(self.dim[1])*self.spacing[1])
@@ -803,7 +807,7 @@ class TDVizCustom(TDViz):
         self._ren.ResetCamera()     
         self._ren.ResetCameraClippingRange()   
         
-        self.initTabletPlane()     
+        #self.initTabletPlane()     
         
         self.distanceWidget.GetDistanceRepresentation().SetPoint1WorldPosition(np.array([0,0,-100]))
         self.distanceWidget.GetDistanceRepresentation().SetPoint2WorldPosition(np.array([0,0,-200])) 
@@ -1454,13 +1458,17 @@ class TDVizCustom(TDViz):
             self.transferFunctionControlItems.combobox_transfunction.setCurrentIndex(self.transferFunctionControlItems.combobox_transfunction.findText(fname+".vvt"))        
     
     def bluetoothConnect(self):
+        self.connect(GlobalVariables.BTL, SIGNAL("dataIn"), self.bluetoothCallback)
         print("connecting")
         GlobalVariables.BTL.start()
         print("connecting2")
         GlobalVariables.BTS.connect()
+        GlobalVariables.online = True
+        #self.bluetoothtext.SetInput("Bluetooth Connected")
+        #self._ren.AddActor(self.bluetoothtext)
         
-        self.bluetoothtext.SetInput("Bluetooth Connected")
-        self._ren.AddActor(self.bluetoothtext)
+    def bluetoothCallback(self, data):
+        print("main thread:" + data)
 
     def trackingOn(self):
         GlobalVariables.bluetoothPauseFlag = False

@@ -1,12 +1,15 @@
 import bluetooth
 import threading
-from PyQt4.QtCore import QThread
+from PyQt4.QtCore import QThread, pyqtSignal, SIGNAL
 import GlobalVariables
 
 """
 Note that each instantiation of this class creates a new thread. 
 """
 class BluetoothListener(QThread):
+    
+    dataIn = pyqtSignal("QString") #custom signal for carrying strings
+    
     def __init__(self):
         QThread.__init__(self)
         #self.setDaemon()    #This makes it so that the thread auto-closes when
@@ -50,7 +53,7 @@ class BluetoothListener(QThread):
                     break
                 if data == "$close_ack":
                     break
-                #instead of printing, this should call functions or change global variables
+                self.emit(SIGNAL("dataIn"), data)
                 print("%s" % data)
         except IOError:
             print("BTL: IOError")
