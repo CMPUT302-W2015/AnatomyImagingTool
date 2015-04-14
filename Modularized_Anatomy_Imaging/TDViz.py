@@ -109,7 +109,8 @@ class TDViz(QMainWindow):
         self.combobox_loadsettings.activated.connect(self.loadSettings)
         
         self.button_bluetoothConnect.clicked.connect(self.bluetoothConnect)
-        self.button_tracking.clicked.connect(self.tracking)
+        self.button_trackingOn.clicked.connect(self.trackingOn)
+        self.button_trackingOff.clicked.connect(self.trackingOff)
         self.button_rotateImage.clicked.connect(self.rotateImage)
         
             
@@ -1461,11 +1462,11 @@ class TDVizCustom(TDViz):
         self.bluetoothtext.SetInput("Bluetooth Connected")
         self._ren.AddActor(self.bluetoothtext)
 
-    def trackingON(self):
-        GlobalVariables.bluetoothPauseFlag = True
+    def trackingOn(self):
+        GlobalVariables.bluetoothPauseFlag = False
         
     def trackingOff(self):
-        GlobalVariables.bluetoothPauseFlag = False
+        GlobalVariables.bluetoothPauseFlag = True
     
     def rotateImage(self):
         while True:
