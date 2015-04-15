@@ -604,10 +604,6 @@ class TDVizCustom(TDViz):
                 style = vtk.vtkInteractorStyleImage()
                 style.SetInteractionModeToImage3D()
                 self._iren.SetInteractorStyle(style)
-
-                
-                
-                #color = imagemaptocolor
                 
                 self.im = vtk.vtkImageSliceMapper() 
                 self.im.SetInputConnection(self.reader.GetOutputPort())
@@ -1468,8 +1464,8 @@ class TDVizCustom(TDViz):
         print("connecting2")
         GlobalVariables.BTS.connect()
         GlobalVariables.online = True
-        #self.bluetoothtext.SetInput("Bluetooth Connected")
-        #self._ren.AddActor(self.bluetoothtext)
+        self.bluetoothtext.SetInput("Bluetooth Connected")
+        self._ren.AddActor(self.bluetoothtext)
         
         
     def bluetoothCallback(self, data):
