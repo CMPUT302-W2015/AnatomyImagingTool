@@ -15,7 +15,7 @@ class vtkTimerHeadTrack():
     tablet=vrpn.receiver.Tracker("Tablet@localhost:3883")
     
     
-    def __init__(self, cam, text, text2, actor, volume, im, master):
+    def __init__(self, cam, text, text2, actor, volume, master):
         print("HeadTrack init")
         self.text = text
         self.text2 = text2
@@ -24,8 +24,8 @@ class vtkTimerHeadTrack():
         
         self.actor = actor
         self.cam = cam
-        self.im = im
-        self.im.SliceAtFocalPointOn()
+#         self.im = im
+#         self.im.SliceAtFocalPointOn()
         self.master = master
         self.rmatrix = np.zeros((4,4))
         self.rmatrix4x4 = vtk.vtkMatrix4x4()        
@@ -74,28 +74,9 @@ class vtkTimerHeadTrack():
     
     def callback(self, userdata, data):
         
-        #print str(userdata)
-        #print str(data)
-        oldCamPos = self.cam.GetPosition()
-        oldCamFoc = self.cam.GetFocalPoint()
-        
         dx, dy, dz = data['position']
         qx, qy, qz, qw = data['quaternion']  
         
-        self.cam.SetPosition(200*dx+73.9,200*dy-50.0,200*dz+598.3)
-        #self.im.SliceAtFocalPointOn()
-        
-        newCamPos = self.cam.GetPosition()
-        xDiff = newCamPos[0] - oldCamPos[0]
-        yDiff = newCamPos[1] - oldCamPos[1]
-        zDiff = newCamPos[2] - oldCamPos[2]
-        
-        oldFocX = self.cam.GetFocalPoint()[0]
-        oldFocY = self.cam.GetFocalPoint()[1]
-        oldFocZ = self.cam.GetFocalPoint()[2]
-        
-        self.cam.SetFocalPoint(oldFocX - xDiff, oldFocY - yDiff, oldFocZ - zDiff)
-        self.im.SliceAtFocalPointOn()
         
         msg = str(dx) + "," + str(dy) + "," + str(dz) + "," + str(qx) + "," + str(qy) + "," + str(qz) + "," + str(qw) 
         
@@ -131,11 +112,8 @@ class vtkTimerHeadTrack():
         print ("dy: " + str(dy*1000))
         print ("dz: " + str(dz*1000))
         '''
-        #self.rmatrix = GlobalVariables.camMat4x4.dot(self.rmatrix) # @UndefinedVariable
-        camx = str(math.floor(self.cam.GetPosition()[0]*10))
-        camy = str(math.floor(self.cam.GetPosition()[1]*10))
-        camz = str(math.floor(self.cam.GetPosition()[2]*10))
-        self.text.SetInput("x=" + camx + " y=" + camy + " z=" + camz)
+
+        
         if sensorid == 0:
             #self.text.SetInput("pos = (%-#6.3g, %-#6.3g, %-#6.3g)\n quaternion = (%-#6.3g, %-#6.3g, %-#6.3g, %-#6.3g)" % (dx, dy, dz, qw, qx, qy, qz))
             

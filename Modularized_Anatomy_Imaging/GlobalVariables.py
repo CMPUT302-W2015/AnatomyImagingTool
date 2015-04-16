@@ -15,7 +15,7 @@ def init():
     global BTL
     global BTS
     global online
-    
+    global bluetoothPaused
 
     global isprojector
     global initfdir 

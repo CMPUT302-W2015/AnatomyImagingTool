@@ -8,6 +8,7 @@ import CropControlItems, CommonControlItems, PositionControlItems, TransferFunct
 import SmoothingControlItems, LightingControlItems, ViewControlItems, LabelControlItems, VtkTimerCallBack, TransferFunctionEditor
 import OpacityEditor, GradientOpacityEditor, ColorEditor, PlaneGenerator
 import platform
+from __builtin__ import True
 
 
 if platform.machine().endswith("64"):
@@ -599,7 +600,7 @@ class TDVizCustom(TDViz):
             self.reader.SetWholeExtent(0, self.dim[0] - 1, 0, self.dim[1] - 1, 0, self.dim[2] - 1)
             self.reader.SetDataSpacing(self.spacing[0], self.spacing[1], self.spacing[2]) 
             
-            if GlobalVariables.device == "TV":
+            if GlobalVariables.device == "tablet":
                 style = vtk.vtkInteractorStyleImage()
                 style.SetInteractionModeToImage3D()
                 self._iren.SetInteractorStyle(style)
@@ -625,18 +626,19 @@ class TDVizCustom(TDViz):
                 self._ren.ResetCameraClippingRange()
                 #self._renWin.Render()
                 
-                self.initTabletPlane()  
-                headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, im, self)
-                headtrack.renderer = self._ren
-                self._iren.AddObserver('TimerEvent', headtrack.execute)
-                self._iren.CreateRepeatingTimer(20)
+                
                 
             
             
             else:
             
             # ------
-            
+                self.initTabletPlane()  
+                headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, self)
+                headtrack.renderer = self._ren
+                self._iren.AddObserver('TimerEvent', headtrack.execute)
+                self._iren.CreateRepeatingTimer(20)
+                
                 #Store the length of each of the image axes
                 GlobalVariables.imageXDist = (float(self.dim[0])*self.spacing[0])
                 GlobalVariables.imageYDist = (float(self.dim[1])*self.spacing[1])
@@ -808,10 +810,10 @@ class TDVizCustom(TDViz):
         self.distanceWidget.GetDistanceRepresentation().SetPoint2WorldPosition(np.array([0,0,-200])) 
                       
         
-        headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, self)
-        headtrack.renderer = self._ren
-        self._iren.AddObserver('TimerEvent', headtrack.execute)
-        self._iren.CreateRepeatingTimer(20)  
+#         headtrack = VTKTimerHeadTrack.vtkTimerHeadTrack(self.cam, self.headtracktext, self.stylustext, self.cubeActor, self.volume, self)
+#         headtrack.renderer = self._ren
+#         self._iren.AddObserver('TimerEvent', headtrack.execute)
+#         self._iren.CreateRepeatingTimer(20)  
                  
         
         self._renWin.Render()  
@@ -1458,12 +1460,18 @@ class TDVizCustom(TDViz):
         print("connecting2")
         GlobalVariables.BTS.connect()
         
+        GlobalVariables.online = True
+        
         self.bluetoothtext.SetInput("Bluetooth Connected")
         self._ren.AddActor(self.bluetoothtext)
 
     def tracking(self):
-        print("WEEEEE")
-    
+        
+        if GlobalVariables.bluetoothPaused == False:
+            GlobalVariables.bluetoothPaused = True
+        else:
+            GlobalVariables.bluetoothPaused = False
+                
     def rotateImage(self):
         while True:
             camPos = GlobalVariables.camMat
