@@ -8,9 +8,10 @@ import PlaneGenerator
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+This is what gets tracking information from the Motive
 '''
 class vtkTimerHeadTrack():
+    # where the data is received from
     tracker=vrpn.receiver.Tracker("Tracker0@localhost")
     tablet=vrpn.receiver.Tracker("Tablet@localhost:3883")
     
@@ -40,7 +41,7 @@ class vtkTimerHeadTrack():
         self.initialZPosition = None
         self.initialScaleTransform = None        
         
-        
+    # This is what loops the tracking function
     def execute(self, obj, event):
         print("HeadTrack execute")
         iren = obj
@@ -70,8 +71,10 @@ class vtkTimerHeadTrack():
             elif data['state'] == 0:
                 self.lineactor.GetProperty().SetColor(1.0,1.0,1.0)
                 self.button2state = False
-'''                             
-    
+''' 
+    '''                            
+    The function that is continusly called when data is received
+    '''
     def callback(self, userdata, data):
         
         dx, dy, dz = data['position']

@@ -3,6 +3,9 @@ from PyQt4.QtCore import Qt
 '''
 Created on Apr 4, 2015
 
+This module adds buttons the Tablet Control tab on the toolbar
+Adds the 'Connect Bluetooth', 'Tracking On/Off', and 'Rotate/Stop' buttons.
+
 @author: ANATOMY-IMAGING
 '''
 

@@ -20,9 +20,10 @@ if device == "TV":
 '''
 Created on Mar 10, 2015
 
-TODO: Separate this class from TDVizCustom
+Contains the basic functionalities of the toolbar
+See TDVizCustom (LOCATED IN THIS FILE) below for further functionalities
 
-@author: Bradley
+TODO: Separate this class from TDVizCustom
 '''
 
 class TDViz(QMainWindow):
@@ -32,6 +33,7 @@ class TDViz(QMainWindow):
         self.frame = QFrame()
         self.vtkWidget = QVTKRenderWindowInteractor(self.frame)
         
+        # Adds the functionalities for the tabs
         self.cropControlItems = CropControlItems.CropControlItems(self)
         self.commonControlItems = CommonControlItems.CommonControlItems(self)
         self.positionControlItems = PositionControlItems.PositionControlItems(self)
@@ -44,6 +46,7 @@ class TDViz(QMainWindow):
         self.labelControlItems = LabelControlItems.LabelControlItems()
         self.tabletControlItems = TabletControlItems.TabletControlItems(self)
         
+        # Adds the tabs to the toolbar
         tabWidget = QTabWidget()
         tabWidget.addTab(self.commonControlItems, "General Controls")
         tabWidget.addTab(self.viewControlItems, "View Controls")
@@ -57,7 +60,7 @@ class TDViz(QMainWindow):
         tabWidget.addTab(self.labelControlItems, "Labelling")
         tabWidget.addTab(self.tabletControlItems, "Tablet Controls")
 
-        
+        # Adds other buttons to toolbar
         buttonGroup = QGroupBox()
         self.button_quit = QPushButton("Close")
         self.button_savesettings = QPushButton("Save Settings")
@@ -88,6 +91,7 @@ class TDViz(QMainWindow):
         self.frame.setLayout(layout)
         self.setCentralWidget(self.frame)
         
+        # Adds buttons to toolbar
         self.button_quit.clicked.connect(self.close)
         self.button_loadEcho.clicked.connect(self.loadEcho)
         self.button_box.clicked.connect(self.setBoxWidget)
@@ -160,7 +164,7 @@ class TDViz(QMainWindow):
         for button in self.button_view:
             button.clicked.connect(self.changeView)
 
-        
+    # renders the window
     def getRenderWindow(self):
         return self.vtkWidget.GetRenderWindow()
         
@@ -168,9 +172,8 @@ class TDViz(QMainWindow):
 '''
 Created on Mar 10, 2015
 
-@todo: Move functionality to separate file
-
-@author: Bradley
+Most of the functionalities for the toolbar exist in this module
+See other comments for more specifics
 '''
 
 class TDVizCustom(TDViz):      
@@ -186,12 +189,6 @@ class TDVizCustom(TDViz):
         self.volume = vtk.vtkVolume()
         self.volumeProperty = vtk.vtkVolumeProperty()        
         
-        
-        ""
-
-
-        ""
-        
         self._renWin.AddRenderer(self._ren)
         self._iren = self._renWin.GetInteractor()
   
@@ -201,9 +198,6 @@ class TDVizCustom(TDViz):
         self.sopuid = []
         self.reader = []
         
-        ""
-        
-        ""
         
         self.initAxes()  
         self.initBoxWidget()
@@ -236,7 +230,8 @@ class TDVizCustom(TDViz):
         self.cam.SetEyeSeparation(60)        
         
         
-        
+        # Only headtracks if device is TV
+        # This may have to be removed to get tablet going
         if device == "TV":
             self.initHeadTrackText()
 
@@ -256,7 +251,13 @@ class TDVizCustom(TDViz):
         obj.RemoveObservers('MouseWheelBackwardEvent')
         obj.RemoveObservers('MouseMoveEvent')        '''
         pass
-        
+    
+    '''
+    Initializes the text around the screen.
+    headtracktext is in the bottom right corner, displays tracking coordinates
+    stylustext is not used in this program
+    bluetoothtext is in the top left corner, displays the bluetooth connection status
+    '''
     def initHeadTrackText(self):
         self.headtracktext = vtk.vtkTextActor()        
         self.headtracktext.SetDisplayPosition(20, 20)      
@@ -272,7 +273,10 @@ class TDVizCustom(TDViz):
         self.bluetoothtext.SetDisplayPosition(20, 950)      
         self.bluetoothtext.SetInput("Bluetooth Disconnected")
         self._ren.AddActor(self.bluetoothtext)  
-        
+    
+    '''
+    Creates the tablet plane
+    '''
     def initTabletPlane(self):
         '''
         PlaneGenerator.init() # @UndefinedVariable 
@@ -334,6 +338,7 @@ class TDVizCustom(TDViz):
             self.planeWidget[i].SetInteractor(self._iren)
             self.planeWidget[i].AddObserver("InteractionEvent", self.pwCallback)  
             self.pwClippingPlanes.AddItem(self.pwPlane[i])
+    
     """
     Need to capture close event and make sure bluetooth threads close properly
     """
@@ -576,6 +581,13 @@ class TDVizCustom(TDViz):
         raw = np.fromstring(header.PixelData, dtype=np.uint8)
         return np.reshape(raw, (dim_x, dim_y, dim_z, number_of_frames), order="F"), (10*spacing_x, 10*spacing_y, 10*spacing_z), header.SOPInstanceUID
     
+    '''
+    This is what occurs after the user uploads an echo image.
+    This is where most of our functionalities exist
+    Thus it only works with an echo image, not a CT/MRI/etc.
+
+    TODO: Move functionalities to be available in other image types
+    '''
     def loadEcho(self):        
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
@@ -600,6 +612,9 @@ class TDVizCustom(TDViz):
             self.reader.SetWholeExtent(0, self.dim[0] - 1, 0, self.dim[1] - 1, 0, self.dim[2] - 1)
             self.reader.SetDataSpacing(self.spacing[0], self.spacing[1], self.spacing[2]) 
             
+            # This only occurs on the tablet program
+            # This generates the slice image
+            #TODO: Callibrate render to be accurate to cursor location
             if GlobalVariables.device == "tablet":
                 style = vtk.vtkInteractorStyleImage()
                 style.SetInteractionModeToImage3D()
@@ -629,7 +644,7 @@ class TDVizCustom(TDViz):
                 
                 
             
-            
+            # This is what is run from the TV program
             else:
             
             # ------
@@ -1454,6 +1469,9 @@ class TDVizCustom(TDViz):
             self.transferFunctionControlItems.combobox_transfunction.addItems(tfunc_files)   
             self.transferFunctionControlItems.combobox_transfunction.setCurrentIndex(self.transferFunctionControlItems.combobox_transfunction.findText(fname+".vvt"))        
     
+    '''
+    Starts the bluetooth connection.
+    '''
     def bluetoothConnect(self):
         print("connecting")
         GlobalVariables.BTL.start()
@@ -1465,13 +1483,22 @@ class TDVizCustom(TDViz):
         self.bluetoothtext.SetInput("Bluetooth Connected")
         self._ren.AddActor(self.bluetoothtext)
 
+    '''
+    This is the functionality to start and stop tablet tracking.
+    It blocks receiving input from the tablet. 
+    Should do nothing on the TV
+    '''
     def tracking(self):
         
         if GlobalVariables.bluetoothPaused == False:
             GlobalVariables.bluetoothPaused = True
         else:
             GlobalVariables.bluetoothPaused = False
-                
+    
+    '''
+    Will eventually be where the image gets rotated via the tablet
+    TODO: implement :)
+    '''
     def rotateImage(self):
         while True:
             camPos = GlobalVariables.camMat

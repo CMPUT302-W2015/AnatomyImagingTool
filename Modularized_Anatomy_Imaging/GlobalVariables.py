@@ -3,7 +3,10 @@
 '''
 Created on March 10th, 2015
 
-@author: Bradley
+Our way of implementing Global Variables accross modules.
+To access variables across modules, GlobalVariables must be imported in the module.
+Then use 'GlobalVariables.--variablename---
+Add the variables here
 '''
 def init():
     import numpy as np

@@ -4,7 +4,7 @@ from PyQt4.QtCore import Qt, QSize
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+The controller for the position buttons on the toolbar
 '''
 
 class PositionControlItems(QWidget):

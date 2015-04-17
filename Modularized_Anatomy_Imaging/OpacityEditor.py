@@ -5,7 +5,8 @@ import numpy as np
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+Edit the opacity of the image.
+This can be controlled from the toolbar 
 '''
 
 class OpacityEditor(QDialog):

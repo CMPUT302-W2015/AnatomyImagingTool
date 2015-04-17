@@ -4,7 +4,8 @@ from PyQt4.QtCore import Qt
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+Contoller for the Lighting Editor.
+The lighting can be edited in the program from the toolbar
 '''
 
 class LightingControlItems(QWidget):

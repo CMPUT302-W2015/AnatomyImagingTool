@@ -4,7 +4,7 @@ from PyQt4.QtCore import Qt
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+Controller for the transfer functions found in the toolbar
 '''
 
 class TransferFunctionControlItems(QWidget):

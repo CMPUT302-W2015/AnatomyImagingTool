@@ -1,3 +1,8 @@
+'''
+This module is is the listener for the Bluetooth connection.
+It waits for Bluetooth signals to be receieved. 
+Uses threading to separate from outgoing Bluetooth messages
+'''
 import bluetooth
 import threading
 from PyQt4.QtCore import QThread

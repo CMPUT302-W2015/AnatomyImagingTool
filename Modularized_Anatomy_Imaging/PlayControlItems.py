@@ -4,7 +4,7 @@ from PyQt4.QtCore import Qt
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+The functionality for the play/stop button in the toolbar
 '''
 
 class PlayControlItems(QWidget):

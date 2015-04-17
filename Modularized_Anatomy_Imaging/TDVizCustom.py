@@ -12,16 +12,17 @@ import GlobalVariables, VtkTimerCallBack, VTKTimerHeadTrack, TransferFunctionEdi
 '''
 Created on Mar 10, 2015
 
-TODO: Fix __init__() problem
-TODO: Fix GlobalVariables import problem
+This is not currently used by the program.
+It's not properly modulized. See the TDVizCustom located in TDViz
 
-@author: Bradley
+TODO: Fix __init__() problem
 '''
 
 class TDVizCustom(TDViz):      
     def __init__(self, parent=None):
         TDViz.__init__(self, parent) # @UndefinedVariable
         
+        # Creates the window
         self._renWin = self.getRenderWindow()
         self._renWin.StereoCapableWindowOn()
         self._renWin.SetStereoTypeToCrystalEyes()
@@ -40,6 +41,7 @@ class TDVizCustom(TDViz):
         self.sopuid = []
         self.reader = []
         
+        # Initializes 
         self.initAxes()  
         self.initBoxWidget()
         self.initMeasurementTool()
@@ -92,7 +94,12 @@ class TDVizCustom(TDViz):
         obj.RemoveObservers('MouseWheelBackwardEvent')
         obj.RemoveObservers('MouseMoveEvent') '''
         pass       
-        
+    
+    '''
+    Initializes the HeadTrackText.
+    This is the text that appears in the bottom right corner of the TV screen.
+    Displays the tracking coordinates
+    '''
     def initHeadTrackText(self):
         self.headtracktext = vtk.vtkTextActor()        
         self.headtracktext.SetDisplayPosition(20, 20)      
@@ -103,7 +110,10 @@ class TDVizCustom(TDViz):
         self.stylustext.SetDisplayPosition(1600, 20)      
         self.stylustext.SetInput("0")
         self._ren.AddActor(self.stylustext)  
-        
+    
+    '''
+    Not used in our system
+    '''
     def initStylus(self):
 
         cube = vtk.vtkCubeSource()
@@ -139,7 +149,6 @@ class TDVizCustom(TDViz):
               
         self._ren.AddActor(self.cubeActor)
         
-       
     def cameraAnyEvent(self,obj,evt):
         self.cameraText.SetInput("Orientation X = %5.0f\nOrientation Y = %5.0f\nOrientation Z = %5.0f" % (obj.GetOrientation()[0],obj.GetOrientation()[1],obj.GetOrientation()[2]))
     
@@ -309,7 +318,10 @@ class TDVizCustom(TDViz):
             self._ren.RemoveActor(self.cameraText)
             
         self._renWin.Render()
-            
+    
+    '''
+    This is the callback for the plane widget
+    '''        
     def pwCallback(self, obj, evt):
         self.volumeMapper.RemoveAllClippingPlanes()
         self.pwClippingPlanes.RemoveAllItems()
@@ -420,6 +432,11 @@ class TDVizCustom(TDViz):
         raw = np.fromstring(header.PixelData, dtype=np.uint8)
         return np.reshape(raw, (dim_x, dim_y, dim_z, number_of_frames), order="F"), (10*spacing_x, 10*spacing_y, 10*spacing_z), header.SOPInstanceUID
     
+    '''
+    This is the what occurs when the user uploads an echo image.
+    Right now this is where a lot of our functionality occurs
+    Thus our functionality only works with echo images (not CT/MRI/etc.)
+    '''
     def loadEcho(self):        
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog

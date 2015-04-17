@@ -5,9 +5,7 @@ from PySide.QtGui import QDialog as pysideQWidget
 '''
 Created on Mar 10, 2015
 
-TODO: Needs to add import statements
-
-@author: Bradley
+Edits the transfer functions
 '''
 
 class TransferFunctionEditor(pysideQWidget): 

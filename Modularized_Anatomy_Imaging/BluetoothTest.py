@@ -1,3 +1,6 @@
+'''
+Module to test the bluetooth connection
+'''
 import BluetoothSender
 import BluetoothListener
 import time

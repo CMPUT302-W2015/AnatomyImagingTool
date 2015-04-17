@@ -3,7 +3,7 @@ from PyQt4.QtGui import QGridLayout, QWidget, QLabel, QPushButton
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+Sets the text on control items
 '''
 
 class ViewControlItems(QWidget):

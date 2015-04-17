@@ -4,7 +4,7 @@ from PyQt4.QtCore import Qt
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+Controller for the smoothing controls on the toolbar
 '''
 
 class SmoothingControlItems(QWidget):

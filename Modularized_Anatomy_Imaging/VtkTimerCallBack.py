@@ -1,7 +1,7 @@
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+Creates a timer for the vtk callback??
 '''
 
 class vtkTimerCallBack():

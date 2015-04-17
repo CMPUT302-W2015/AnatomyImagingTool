@@ -3,7 +3,8 @@ from PyQt4.QtGui import QWidget, QPushButton, QHBoxLayout
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+Creates the buttons for the main screen of the control bar
+Also calls the appropriate functions when button pressed.
 '''
 
 class CommonControlItems(QWidget):
@@ -13,6 +14,7 @@ class CommonControlItems(QWidget):
         
         nbuttons = 8
         
+        # Names of the buttons
         master.button_loadEcho, master.button_loadDir, master.button_rotate, \
             master.button_stereo, master.button_measurement, master.button_anglemeasurement,  master.button_cameratext, master.button_savescreen = [QPushButton() for i in range(nbuttons)]                    
         buttontext = ["Load Echo", "Load MR/CT",  "Rotate/Stop", "Stereo On/Off", "Distance Meas. On/Off", "Angle Meas. On/Off", "Display Orientation", "Save Screen"]

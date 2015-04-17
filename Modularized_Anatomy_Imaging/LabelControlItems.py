@@ -4,7 +4,8 @@ from PyQt4.QtCore import Qt
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+Controls the Label controls.
+Located in the toolbar
 '''
 
 class LabelControlItems(QWidget):

@@ -5,7 +5,8 @@ import numpy as np
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+Controls the editor for gradient and opacity.
+These controls are found in the toolbar
 '''
 
 class GradientOpacityEditor(QDialog):

@@ -8,7 +8,8 @@ from PyQt4.QtCore import QFile, QLatin1String
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+This is the initial startup module for the program.
+This is the program that you run to activate the program.
 '''
 def main():
 

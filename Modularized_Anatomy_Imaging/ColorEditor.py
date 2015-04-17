@@ -5,7 +5,7 @@ import numpy as np
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+Edits the color
 '''
 
 class ColorEditor(QDialog):        

@@ -4,7 +4,8 @@ from PyQt4.QtCore import Qt
 '''
 Created on Mar 10, 2015
 
-@author: Bradley
+Controls the crop features. 
+Accessed through the toolbar by pressing the Crop button
 '''
 
 class CropControlItems(QWidget):

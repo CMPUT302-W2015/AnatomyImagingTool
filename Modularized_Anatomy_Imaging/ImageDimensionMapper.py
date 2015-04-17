@@ -3,6 +3,8 @@ import GlobalVariables
 '''
 Created on Mar 13, 2015
 
+Maps the dimesions of the image
+
 @see http://stackoverflow.com/questions/1969240/mapping-a-range-of-values-to-another
 
 @author: ANATOMY-IMAGING
